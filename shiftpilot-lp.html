@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShiftPilot — 複数店舗のシフトを、AIが1分で組む。</title>
+<meta name="description" content="複数店舗・複数業態のシフト管理を、AIが1分で完成。LINE通知で配信、スタッフは一画面で確認。経営者の右腕、シフト管理に降りてきました。">
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --bg-soft:#141414;
+    --fg:#f5f5f5;
+    --fg-mute:#999;
+    --accent:#ffd84d;
+    --accent-strong:#fbc02d;
+    --line:#222;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--fg);font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .mincho{font-family:"Hiragino Mincho ProN","YuMincho","Yu Mincho",serif}
+  a{color:var(--accent);text-decoration:none}
+  img{max-width:100%;display:block;border-radius:8px}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  .nav{position:sticky;top:0;background:rgba(10,10,10,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 0;z-index:10}
+  .nav-inner{display:flex;justify-content:space-between;align-items:center}
+  .logo{font-weight:700;letter-spacing:.05em;font-size:18px}
+  .logo span{color:var(--accent)}
+  .nav a.cta{background:var(--accent);color:#000;padding:8px 14px;border-radius:6px;font-weight:700;font-size:14px}
+
+  /* Hero */
+  .hero{padding:80px 0 60px;border-bottom:1px solid var(--line)}
+  .hero h1{font-size:42px;line-height:1.4;letter-spacing:.01em;margin-bottom:24px}
+  .hero h1 .accent{color:var(--accent);display:inline-block}
+  .hero .sub{font-size:20px;color:var(--fg-mute);margin-bottom:36px;line-height:1.6}
+  .hero .sub strong{color:var(--fg);font-weight:600}
+  .btn-row{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:14px 24px;border-radius:8px;font-weight:700;font-size:15px;transition:transform .15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--accent);color:#000}
+  .btn-secondary{background:transparent;color:var(--fg);border:1px solid var(--line)}
+
+  /* Sections */
+  section{padding:72px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:30px;margin-bottom:36px;line-height:1.5}
+  section h2 .num{color:var(--accent);font-family:"Hiragino Mincho ProN",serif;margin-right:12px;font-size:24px;letter-spacing:.05em}
+  .lead{font-size:18px;color:var(--fg-mute);margin-bottom:24px;line-height:1.7}
+
+  /* Pain points */
+  .pain{display:grid;grid-template-columns:1fr;gap:20px}
+  .pain-card{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;padding:24px}
+  .pain-card .quote{font-size:18px;margin-bottom:12px}
+  .pain-card .quote::before{content:"「";color:var(--accent);font-size:22px}
+  .pain-card .quote::after{content:"」";color:var(--accent);font-size:22px}
+  .pain-card .note{font-size:14px;color:var(--fg-mute)}
+
+  /* Definition */
+  .def{background:var(--bg-soft);border-left:4px solid var(--accent);padding:24px 28px;border-radius:0 12px 12px 0;font-size:20px;line-height:1.7}
+  .def strong{color:var(--accent)}
+
+  /* Features */
+  .feat{display:grid;grid-template-columns:1fr;gap:24px}
+  .feat-card{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;padding:28px}
+  .feat-card .feat-num{display:inline-block;width:32px;height:32px;line-height:32px;text-align:center;background:var(--accent);color:#000;border-radius:50%;font-weight:700;margin-bottom:16px}
+  .feat-card h3{font-size:20px;margin-bottom:10px}
+  .feat-card p{color:var(--fg-mute);font-size:15px}
+
+  /* Flow (1日の流れ) */
+  .flow{display:grid;grid-template-columns:1fr;gap:0;border-left:2px solid var(--accent);padding-left:24px;margin-left:8px}
+  .flow-step{padding:0 0 32px 0;position:relative}
+  .flow-step::before{content:"";position:absolute;left:-30px;top:6px;width:12px;height:12px;background:var(--accent);border-radius:50%;border:3px solid var(--bg)}
+  .flow-step .time{color:var(--accent);font-weight:700;font-size:14px;letter-spacing:.05em}
+  .flow-step h4{font-size:18px;margin:6px 0 8px}
+  .flow-step p{color:var(--fg-mute);font-size:15px}
+
+  /* Diff */
+  .diff-tbl{width:100%;border-collapse:collapse;font-size:15px}
+  .diff-tbl th,.diff-tbl td{border:1px solid var(--line);padding:14px 16px;text-align:left;vertical-align:top}
+  .diff-tbl th{background:var(--bg-soft);color:var(--accent);font-weight:700}
+  .diff-tbl td.ok{color:var(--accent);font-weight:600}
+  .diff-tbl td.no{color:var(--fg-mute)}
+
+  /* Price */
+  .price-box{background:var(--bg-soft);border:1px solid var(--line);border-radius:16px;padding:36px;text-align:center}
+  .price-box .label{display:inline-block;background:var(--accent);color:#000;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:18px;letter-spacing:.05em}
+  .price-box .price{font-size:48px;font-weight:700;margin-bottom:8px}
+  .price-box .price span{font-size:18px;color:var(--fg-mute);font-weight:400}
+  .price-box .desc{color:var(--fg-mute);margin-bottom:24px}
+
+  /* CTA */
+  .cta-section{background:linear-gradient(135deg,var(--bg-soft),#1a1a1a);text-align:center}
+  .cta-section h2{font-size:32px;margin-bottom:24px}
+  .cta-section .lead{font-size:17px}
+  .cta-section .btn-primary{padding:18px 36px;font-size:17px}
+
+  /* Footer */
+  footer{padding:48px 0 36px;color:var(--fg-mute);font-size:13px;text-align:center}
+  footer a{color:var(--fg-mute);border-bottom:1px solid var(--line)}
+
+  /* responsive */
+  @media (min-width:760px){
+    .hero h1{font-size:56px}
+    .hero .sub{font-size:22px}
+    .pain{grid-template-columns:repeat(3,1fr)}
+    .feat{grid-template-columns:repeat(3,1fr)}
+    section h2{font-size:34px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <div class="logo">Shift<span>Pilot</span></div>
+    <a class="cta" href="https://form.run/@taka3210" target="_blank">無料で試す</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="wrap">
+    <h1 class="mincho">シフト作成、<br>まだ<span class="accent">半日</span>かけてませんか？</h1>
+    <p class="sub">複数店舗のシフトを、<strong>AIが1分で組みます。</strong><br>確定したシフトは、LINEで自動配信。</p>
+    <div class="btn-row">
+      <a href="https://form.run/@taka3210" class="btn btn-primary" target="_blank">無料で試す →</a>
+      <a href="#what" class="btn btn-secondary">ShiftPilotとは？</a>
+    </div>
+  </div>
+</header>
+
+<!-- Section 1: Pain Points -->
+<section>
+  <div class="wrap">
+    <h2><span class="num">01</span>こんな悩み、ありませんか？</h2>
+    <div class="pain">
+      <div class="pain-card">
+        <div class="quote">複数店舗のシフトを、別々の紙とExcelで管理してて、頭がパンクする</div>
+        <div class="note">多店舗オーナーあるある</div>
+      </div>
+      <div class="pain-card">
+        <div class="quote">毎月のシフト作成に、半日以上かかってる。これだけで休みが潰れる</div>
+        <div class="note">店長の時間泥棒</div>
+      </div>
+      <div class="pain-card">
+        <div class="quote">LINEで個別連絡してたら、確認漏れや「知りませんでした」が頻発</div>
+        <div class="note">連絡コストが消えない</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 2: What is ShiftPilot -->
+<section id="what">
+  <div class="wrap">
+    <h2><span class="num">02</span>ShiftPilotとは？</h2>
+    <p class="lead">複数店舗・複数業態の経営者のためのAIシフト管理SaaS。</p>
+    <div class="def mincho">
+      <strong>シフト作成、配信、管理を、AIが代行。</strong><br>
+      経営者は、確認するだけ。
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: 3 Features -->
+<section>
+  <div class="wrap">
+    <h2><span class="num">03</span>3つの特徴</h2>
+    <div class="feat">
+      <div class="feat-card">
+        <div class="feat-num">1</div>
+        <h3>複数店舗を1画面で統合管理</h3>
+        <p>会社の下に複数店舗を紐付け、ワンクリックで切り替え。スタッフ・スキル・人件費も横断で見える。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">2</div>
+        <h3>AI自動シフト生成（3モード）</h3>
+        <p>バランス／人件費優先／熟練度優先の3モードから選択。スタッフ希望と必要人数を1分で擦り合わせ。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">3</div>
+        <h3>LINE通知でスタッフへ自動配信</h3>
+        <p>シフト確定と同時にLINEへ自動送信。確認漏れゼロ、欠勤申請も同じLINEで往復。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Manager's Day -->
+<section>
+  <div class="wrap">
+    <h2><span class="num">04</span>マネージャーの1日</h2>
+    <p class="lead">朝のコーヒーから、夕方の配信まで。</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="time">朝 ☕ 08:00</div>
+        <h4>ダッシュボードで全店舗チェック</h4>
+        <p>会社単位のホーム画面に、全店舗のスタッフ提出状況・空きシフト・必要人数が並ぶ。</p>
+      </div>
+      <div class="flow-step">
+        <div class="time">昼 🍱 12:00</div>
+        <h4>未提出スタッフへLINEリマインド</h4>
+        <p>未提出者を1クリックで抽出、ワンタップで全員にLINE催促。</p>
+      </div>
+      <div class="flow-step">
+        <div class="time">夕 🌇 17:00</div>
+        <h4>AI自動シフト生成 → 確認 → 公開</h4>
+        <p>「生成」ボタンで1分後にシフト完成。気になる枠だけ手で調整、「公開」でLINE一斉配信。</p>
+      </div>
+      <div class="flow-step">
+        <div class="time">夜 🌙 22:00</div>
+        <h4>欠勤・代打もLINEで完結</h4>
+        <p>スタッフからの欠勤申請、代打募集、応募、承認、すべてLINE上で。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: 何が違う -->
+<section>
+  <div class="wrap">
+    <h2><span class="num">05</span>既存ツールと、何が違う？</h2>
+    <p class="lead">「シフト管理ツール」は今や多数。でも、複数店舗・複数業態を一画面で扱えるものは少ない。</p>
+    <table class="diff-tbl">
+      <thead>
+        <tr>
+          <th>機能</th>
+          <th>ShiftPilot</th>
+          <th>一般的なツール</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>複数店舗を1画面で統合管理</td><td class="ok">◎</td><td class="no">△</td></tr>
+        <tr><td>業態別スキル管理（料理・接客・レジ等）</td><td class="ok">◎</td><td class="no">△</td></tr>
+        <tr><td>AI自動シフト生成（3モード）</td><td class="ok">◎</td><td class="no">有料オプション</td></tr>
+        <tr><td>LINE通知標準搭載</td><td class="ok">◎</td><td class="no">有料オプション</td></tr>
+        <tr><td>複数会社（マルチカンパニー）対応</td><td class="ok">◎</td><td class="no">×</td></tr>
+        <tr><td>御社業態に合わせたカスタマイズ対応</td><td class="ok">◎</td><td class="no">×</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Section 6: Price -->
+<section>
+  <div class="wrap">
+    <h2><span class="num">06</span>料金</h2>
+    <div class="price-box">
+      <div class="label">β版 運用中</div>
+      <div class="price">¥0<span> / 当面無料</span></div>
+      <div class="desc">事業性検証フェーズのため、現在のユーザー様には無料で全機能をご提供。<br>将来の料金プランは個別ヒアリング後にご相談。</div>
+      <a href="https://form.run/@taka3210" class="btn btn-primary" target="_blank">無料で試す →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="wrap">
+    <h2 class="mincho">シフトの半日を、<br>経営の半日に。</h2>
+    <p class="lead">ShiftPilotは、複数店舗の経営者の右腕としてAIが動くシフト管理ツールです。<br>導入相談・デモのご依頼は、下記からお気軽にどうぞ。</p>
+    <a href="https://form.run/@taka3210" class="btn btn-primary">無料相談はこちら →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>ShiftPilot — 経営者の右腕シフト管理ツール</p>
+    <p style="margin-top:8px">運営：TAKA（三井隆義）／お問い合わせ：<a href="https://form.run/@taka3210" target="_blank">form.run/@taka3210</a></p>
+    <p style="margin-top:8px">© 2026 ShiftPilot</p>
+  </div>
+</footer>
+
+</body>
+</html>
