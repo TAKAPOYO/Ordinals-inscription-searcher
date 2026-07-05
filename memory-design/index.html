@@ -107,7 +107,7 @@ p{margin-bottom:1.4em}
   max-width:860px;margin:0 auto;padding:0 24px;
   text-align:center;
 }
-.hero .eyebrow{color:var(--glow)}
+.hero .eyebrow{color:var(--glow);font-size:clamp(14px,2.2vw,18px);letter-spacing:.28em}
 .hero-hook{
   margin-top:34px;
   font-size:clamp(15px,2.6vw,20px);
@@ -116,7 +116,7 @@ p{margin-bottom:1.4em}
   letter-spacing:.08em;
   text-shadow:0 1px 24px rgba(12,18,16,.95);
 }
-.hero-brand{margin:6px 0 40px}
+.hero-brand{margin:10px 0 44px}
 .hero h1{
   font-family:var(--serif);
   font-weight:800;
@@ -137,11 +137,12 @@ p{margin-bottom:1.4em}
 .brand-line{
   display:inline-block;
   margin-top:6px;
-  font-family:var(--sans);
-  letter-spacing:.28em;
-  font-weight:700;
-  font-size:clamp(13px,2vw,16px);
+  font-family:var(--serif);
+  letter-spacing:.14em;
+  font-weight:800;
+  font-size:clamp(24px,4.6vw,40px);
   color:var(--glow);
+  text-shadow:0 0 40px rgba(93,199,154,.35);
 }
 .btn{
   display:inline-block;
@@ -241,6 +242,7 @@ p{margin-bottom:1.4em}
 }
 .sec-dark .pull{color:var(--white)}
 .pull .accent{display:inline}
+.pull-xl{font-size:clamp(20px,4.3vw,42px);letter-spacing:.03em}
 
 /* ---------- 朝のシーン ---------- */
 .phone-notif{
@@ -485,8 +487,8 @@ footer{
   <div class="hero-inner">
     <span class="eyebrow">経営者のための AI記憶設計</span>
     <p class="hero-hook">体感9割の人が、AIを使いこなせていない。</p>
-    <h1>自分のAIを、<br>世界一の右腕にする。</h1>
-    <p class="hero-sub">毎回初対面のAIに、記憶とアイデンティティを宿らせる設計サービス。</p>
+    <h1>貴方のAIを、<br>世界一の右腕にする。</h1>
+    <p class="hero-sub">AIに連続した記憶とアイデンティティを宿らせ、経営者の文脈と判断の癖を覚えさせることにより、最高の相棒にするサービス。</p>
     <div class="hero-brand"><span class="brand-line">『 MEMORY DESIGN 』</span></div>
     <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む</a>
   </div>
@@ -505,7 +507,7 @@ footer{
         <div class="voice-line">「結局、<em>自分でやった方が早い</em>んですよね〜」</div>
       </div>
       <p>そう言う経営者の方が、まだまだたくさんいます。この感覚、ある意味間違ってはいません。でも、本当に使いこなしている人に聞けば必ずこう返ってきます。</p>
-      <p class="pull">「もうこれがない世界なんて、<br class="sp-only">考えられない」</p>
+      <p class="pull pull-xl">「もうこれがない世界なんて、考えられない」</p>
       <p>この差は、どこで生まれるのか。2025年11月、世界最大の経営コンサル会社マッキンゼーが、世界105カ国・約2,000社を対象にした調査報告書を出しました。</p>
     </div>
     <div class="stats rv">
@@ -557,7 +559,9 @@ footer{
       <p><strong>この説明、先週も同じことを打ち込んでいませんでしたか？</strong></p>
       <p>今日聞いたことを、明日また同じ文脈で聞いたら、相手は覚えていません。昨日話した内容を、今日のAIは知りません。<span class="accent">毎回、初対面です。</span></p>
       <p>これが【記憶のないAI】です。どれだけ優秀なコンサルタントでも、あなたの業界の歴史、会社の文化、過去の失敗と成功を知らない人は「教科書通りの答え」しか出せません。だから「便利なんだけど、なんか薄っぺらい」という感覚になるんです。</p>
-      <p>これはAIが悪いんじゃありません。<strong>AIに記憶を持たせていないから、答えに厚みが出ない</strong>。それだけです。</p>
+      <p>これはAIが悪いんじゃありません。</p>
+      <p class="pull">AIに<span class="accent">記憶</span>を持たせていないから、<br>答えに厚みが出ない。</p>
+      <p style="text-align:center">それだけです。</p>
     </div>
   </div>
 </section>
@@ -568,10 +572,10 @@ footer{
     <div class="rv">
       <span class="eyebrow">6:00 AM</span>
       <h2>朝6時に、全部終わっている。</h2>
-      <p class="lead">記憶を持ったAIのいる朝は、スマホの通知音で始まります。まだ布団の中。画面には、一行だけ。</p>
+      <p class="lead">記憶を持ったAIのいる朝は、スマホの通知音で始まります。</p>
     </div>
     <div class="phone-notif rv">
-      <div class="app"><span class="dot"></span>あなたのAI・今朝のブリーフ</div>
+      <div class="app"><span class="dot"></span>今朝のブリーフ</div>
       <div class="msg">今日の優先事項3件、昨日の積み残し2件、10時の打ち合わせ用の事前メモ、準備完了。</div>
     </div>
     <div class="morning-list rv">
@@ -580,8 +584,9 @@ footer{
       <div class="m-item"><span class="t">発信・文章</span><span>あなたの過去の文章を全部読んでいるAIが、あなたの文体で下書きを作る。直すのは15分で済む。</span></div>
     </div>
     <div class="rv" style="margin-top:40px">
-      <p>これは全部、AIが<strong>【記憶を持っているから】</strong>できる話です。あなたの会社のこと、判断軸、文体、今週のフォーカス。全部AIが知っていて、夜のうちに処理して、朝に結果を置いておく。</p>
-      <p><strong>「今日何をすべきか」を考えることが、なくなります。</strong>AIがすでに整理して置いてくれているから。あなたは判断するだけでいい。</p>
+      <p class="lead">これは全部、AIが<strong>【記憶を持っているから】</strong>できる話です。あなたの会社のこと、判断軸、文体、今週のフォーカス。全部AIが知っていて、夜のうちに処理して、朝に結果を置いておく。</p>
+      <p class="pull">「今日何をすべきか」を<br>考えることが、なくなります。</p>
+      <p class="lead" style="text-align:center">AIがすでに整理して置いてくれているから。<br><strong>あなたは判断するだけでいい。</strong></p>
     </div>
   </div>
 </section>
@@ -606,7 +611,7 @@ footer{
     <p class="def-eq rv">記憶がないAIは、便利な道具。<br>記憶とアイデンティティがあるAIは、<span class="accent">パートナー＝右腕</span>。</p>
     <div class="rv" style="margin-top:28px">
       <p>右腕というのは比喩じゃありません。あなたが不在でも、あなたの判断軸で動ける。あなたが説明しなくても、文脈を理解して行動できる。</p>
-      <p>この差は3ヶ月後に初めてわかります。半年後に「やっておいてよかった」と思います。1年後に「やっていなかった人との差」を見て、背筋が凍ります。それくらいの変化です。</p>
+      <p class="lead">この差は3ヶ月後に初めてわかります。半年後に「やっておいてよかった」と思います。<strong>1年後に「やっていなかった人との差」を見て、背筋が凍ります。</strong>それくらいの変化です。</p>
     </div>
   </div>
 </section>
@@ -642,7 +647,6 @@ footer{
       <span class="arr">→</span>
       <div class="box"><b>出力口</b><span>翌朝、結果が届く</span></div>
     </div>
-    <p class="note rv" style="text-align:center;margin-top:18px">基本の土台は30分で作れます。エンジニアである必要はありません。</p>
   </div>
 </section>
 
@@ -656,22 +660,22 @@ footer{
     </div>
     <div class="growth rv">
       <div class="g-step">
-        <canvas class="gc" data-n="14" aria-hidden="true"></canvas>
+        <canvas class="gc" data-n="40" aria-hidden="true"></canvas>
         <div class="g-t">1ヶ月</div>
         <div class="g-d">文脈はまだ浅い。<br>答えに一般論が混じる</div>
       </div>
       <div class="g-step">
-        <canvas class="gc" data-n="40" aria-hidden="true"></canvas>
+        <canvas class="gc" data-n="90" aria-hidden="true"></canvas>
         <div class="g-t">3ヶ月</div>
         <div class="g-d">会社の事情を踏まえた<br>答えが返り始める</div>
       </div>
       <div class="g-step">
-        <canvas class="gc" data-n="90" aria-hidden="true"></canvas>
+        <canvas class="gc" data-n="170" aria-hidden="true"></canvas>
         <div class="g-t">6ヶ月</div>
         <div class="g-d">判断の記録・顧客情報・<br>業界知識が積層する</div>
       </div>
       <div class="g-step">
-        <canvas class="gc" data-n="170" aria-hidden="true"></canvas>
+        <canvas class="gc" data-n="380" data-dense="1" aria-hidden="true"></canvas>
         <div class="g-t">1年</div>
         <div class="g-d">会社を誰よりも知るAI。<br>もう追いつけない差に</div>
       </div>
@@ -939,7 +943,7 @@ footer{
   function seeded(s){ return function(){ s=(s*9301+49297)%233280; return s/233280; }; }
   document.querySelectorAll('.gc').forEach((cv, idx)=>{
     const n = +cv.dataset.n;
-    const rnd = seeded(42+idx*7);
+    const dense = !!cv.dataset.dense; // 1年：星団構造でさらに複雑に
     const dpr = Math.min(devicePixelRatio||1,2);
     const draw = ()=>{
       const s = cv.clientWidth;
@@ -948,21 +952,38 @@ footer{
       c.setTransform(dpr,0,0,dpr,0,0);
       const pts=[];
       const r2 = seeded(42+idx*7);
+      // 星団の中心（denseのみ：Obsidian俯瞰ビュー風）
+      const hubs=[];
+      if(dense){
+        for(let h=0;h<7;h++){
+          const a=r2()*Math.PI*2, d=Math.pow(r2(),.7)*s*.36;
+          hubs.push({x:s/2+Math.cos(a)*d, y:s/2+Math.sin(a)*d});
+        }
+      }
       for(let i=0;i<n;i++){
-        // 中心寄りに集まる分布
-        const a=r2()*Math.PI*2, d=Math.pow(r2(),.6)*s*.42;
-        pts.push({x:s/2+Math.cos(a)*d, y:s/2+Math.sin(a)*d, r:r2()<.1?2.2:0.8+r2()*1.1});
+        let x,y;
+        if(dense && r2()<.45){
+          // 星団の周りに集まるノード
+          const hb=hubs[Math.floor(r2()*hubs.length)];
+          const a=r2()*Math.PI*2, d=Math.pow(r2(),.8)*s*.11;
+          x=hb.x+Math.cos(a)*d; y=hb.y+Math.sin(a)*d;
+        }else{
+          const a=r2()*Math.PI*2, d=Math.pow(r2(), dense?.78:.6)*s*(dense?.46:.42);
+          x=s/2+Math.cos(a)*d; y=s/2+Math.sin(a)*d;
+        }
+        pts.push({x, y, r:r2()<.1?2.2:0.8+r2()*1.1});
       }
       c.lineWidth=.5;
+      const linkR = s*(dense?.12:.16);
       for(let i=0;i<pts.length;i++){
         let best=[], p=pts[i];
         for(let j=0;j<pts.length;j++){
           if(i===j) continue;
           const q=pts[j], dd=(p.x-q.x)**2+(p.y-q.y)**2;
-          if(dd < (s*.16)**2) best.push(q);
+          if(dd < linkR*linkR) best.push(q);
         }
         best.slice(0,3).forEach(q=>{
-          c.strokeStyle='rgba(190,210,198,.12)';
+          c.strokeStyle='rgba(190,210,198,'+(dense?.09:.12)+')';
           c.beginPath(); c.moveTo(p.x,p.y); c.lineTo(q.x,q.y); c.stroke();
         });
       }
