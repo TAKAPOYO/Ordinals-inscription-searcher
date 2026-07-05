@@ -116,7 +116,7 @@ p{margin-bottom:1.4em}
   letter-spacing:.08em;
   text-shadow:0 1px 24px rgba(12,18,16,.95);
 }
-.hero-brand{margin:10px 0 44px}
+.hero-brand{margin:16px 0 8px}
 .hero h1{
   font-family:var(--serif);
   font-weight:800;
@@ -136,13 +136,13 @@ p{margin-bottom:1.4em}
 }
 .brand-line{
   display:inline-block;
-  margin-top:6px;
   font-family:var(--serif);
-  letter-spacing:.14em;
+  letter-spacing:.1em;
   font-weight:800;
-  font-size:clamp(24px,4.6vw,40px);
+  font-size:clamp(28px,5.6vw,52px);
   color:var(--glow);
-  text-shadow:0 0 40px rgba(93,199,154,.35);
+  text-shadow:0 0 44px rgba(93,199,154,.4);
+  white-space:nowrap;
 }
 .btn{
   display:inline-block;
@@ -242,7 +242,7 @@ p{margin-bottom:1.4em}
 }
 .sec-dark .pull{color:var(--white)}
 .pull .accent{display:inline}
-.pull-xl{font-size:clamp(20px,4.3vw,42px);letter-spacing:.03em}
+.pull-xl{font-size:clamp(14px,3.9vw,38px);letter-spacing:0;white-space:nowrap}
 
 /* ---------- 朝のシーン ---------- */
 .phone-notif{
@@ -375,6 +375,33 @@ p{margin-bottom:1.4em}
   color:var(--green);border:1px solid var(--green);border-radius:999px;
   padding:3px 14px;margin-bottom:14px;
 }
+.addon{
+  margin-top:44px;
+  border:1px dashed #C4CFC2;
+  border-radius:16px;
+  padding:36px 32px;
+  background:rgba(255,255,255,.5);
+}
+.addon-title{
+  font-family:var(--serif);
+  font-size:clamp(17px,2.6vw,21px);
+  font-weight:700;
+  text-align:center;
+  letter-spacing:.04em;
+  margin-bottom:24px;
+}
+.chips{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+}
+.chip{
+  background:#fff;
+  border:1px solid #D5DDD3;
+  border-radius:999px;
+  padding:8px 20px;
+  font-size:13.5px;
+  font-weight:500;
+  color:var(--ink);
+}
 .no-subsc{
   text-align:center;
   font-family:var(--serif);font-weight:700;
@@ -486,10 +513,10 @@ footer{
   <canvas id="graph" aria-hidden="true"></canvas>
   <div class="hero-inner">
     <span class="eyebrow">経営者のための AI記憶設計</span>
+    <div class="hero-brand"><span class="brand-line">『 MEMORY DESIGN 』</span></div>
     <p class="hero-hook">体感9割の人が、AIを使いこなせていない。</p>
     <h1>貴方のAIを、<br>世界一の右腕にする。</h1>
-    <p class="hero-sub">AIに連続した記憶とアイデンティティを宿らせ、経営者の文脈と判断の癖を覚えさせることにより、最高の相棒にするサービス。</p>
-    <div class="hero-brand"><span class="brand-line">『 MEMORY DESIGN 』</span></div>
+    <p class="hero-sub">AIに連続した記憶とアイデンティティを宿らせ、経営者の文脈と判断の癖を覚えさせることにより、最高の相棒にするサービスです。</p>
     <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む</a>
   </div>
   <div class="hero-scrollcue">SCROLL</div>
@@ -543,7 +570,6 @@ footer{
       <p>では、成果を出している6%は何が違ったのか。技術力でも、最先端ツールでもありません。マッキンゼーはこう言っています。</p>
       <p class="pull">「差は、<span class="accent">設計</span>と<span class="accent">覚悟</span>だ」</p>
       <p>業務のやり方を根本から作り直した会社は、そうでない会社より<strong>3.6倍以上</strong>の確率でAIから大きな成果を得ていました。AIの優劣ではない。<strong>【どう使うか】を設計して本気でコミットした会社だけが勝っていた</strong>、ということです。</p>
-      <p>このページでは、その「設計」の話をします。</p>
     </div>
   </div>
 </section>
@@ -621,8 +647,8 @@ footer{
   <div class="wrap">
     <div class="rv">
       <span class="eyebrow">How It Works</span>
-      <h2>仕組みを作るのは、<br>難しくない。</h2>
-      <p class="lead">難しいコードは1行も書きません。使うのは、たった2つのツールです。</p>
+      <h2>仕組みの土台はすべて<br>設計士が作ります。</h2>
+      <p class="lead">4つのツールを組み合わせて、AIに記憶とアイデンティティを組み込みます。</p>
     </div>
     <div class="tools rv">
       <div class="tool">
@@ -635,9 +661,19 @@ footer{
         <p>無料のノートアプリ。決定的な違いは、全ノートが<strong>あなたのPCの中に、ただのテキストファイルとして</strong>保存されること。</p>
         <p>クラウドの中ではなく手元にあるから、Claude Codeが直接読めます。APIもプラグインも、難しい設定も要りません。</p>
       </div>
+      <div class="tool">
+        <h3>VS Code<small>すべてが完結する司令室</small></h3>
+        <p>世界で最も使われている無料のエディタ。Claude Codeへの指示、ファイルの確認、メモの編集が<strong>1つの画面ですべて完結</strong>します。</p>
+        <p>黒い画面をいくつも行き来する必要はありません。毎日開くのはこれ1つだけです。</p>
+      </div>
+      <div class="tool">
+        <h3>GitHub<small>記憶を守る金庫</small></h3>
+        <p>ノートの変更履歴をすべて記録するバックアップ基盤。<strong>間違って消しても、過去の状態にいつでも戻せます。</strong></p>
+        <p>PCの買い替えや故障があっても、積み上げた記憶は失われません。育てた右腕を守る保険です。</p>
+      </div>
     </div>
     <div class="rv">
-      <p>この2つを繋ぐと、あなたのObsidianに溜まっている日報・打ち合わせ記録・アイデアメモ・顧客情報・過去の判断を、全部Claude Codeが読める状態になります。<strong>AIがあなたの仕事の【歴史】を持てるようになる</strong>んです。</p>
+      <p>この4つを繋ぐと、あなたのObsidianに溜まっている日報・打ち合わせ記録・アイデアメモ・顧客情報・過去の判断を、全部Claude Codeが読める状態になります。<strong>AIがあなたの仕事の【歴史】を持てるようになる</strong>んです。</p>
       <p>運用はシンプル。最初に覚えるフォルダは、2つだけです。</p>
     </div>
     <div class="flow rv">
@@ -733,6 +769,24 @@ footer{
         <h3>AIが自律的に動き始めるまで、3ヶ月伴走する</h3>
         <p>仕組みを作って終わりじゃありません。3ヶ月間、育つのを一緒に見ます。「やってみたけど思ったのと違う」という場面で一緒に調整できるのが、伴走の意味です。</p>
       </div>
+    </div>
+    <div class="addon rv">
+      <h3 class="addon-title">さらに、あなたの仕事に合わせて<br class="sp">こんな使い方も伝授できます</h3>
+      <div class="chips">
+        <span class="chip">セキュリティ設定</span>
+        <span class="chip">VPS導入（スマホから操作）</span>
+        <span class="chip">WSL環境構築</span>
+        <span class="chip">SSH接続</span>
+        <span class="chip">Discord連携</span>
+        <span class="chip">Slack連携</span>
+        <span class="chip">Linear連携</span>
+        <span class="chip">Gmail管理</span>
+        <span class="chip">Googleカレンダー管理</span>
+        <span class="chip">MCP連携</span>
+        <span class="chip">音声入力</span>
+        <span class="chip">…など</span>
+      </div>
+      <p class="note" style="text-align:center;margin-top:18px">必要なものだけを選んで組み込みます。全部入れる必要はありません。</p>
     </div>
     <div class="rv">
       <p class="no-subsc">3ヶ月経ったら、あなたのAIは自分で動いています。<br>そうなったら、私は必要なくなります。<span class="accent">それでいいんです。</span></p>
