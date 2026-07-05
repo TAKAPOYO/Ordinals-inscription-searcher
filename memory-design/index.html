@@ -480,12 +480,18 @@ p{margin-bottom:1.4em}
 
 /* ---------- プロフィール ---------- */
 .profile{
-  display:grid;grid-template-columns:auto 1fr;gap:36px;
+  display:grid;grid-template-columns:260px 1fr;gap:40px;
   align-items:start;margin-top:40px;
+}
+.profile-photo img{
+  width:100%;display:block;
+  border-radius:16px;
+  box-shadow:0 16px 44px rgba(28,36,32,.16);
 }
 .profile .name-block{
   border-left:3px solid var(--green);
   padding-left:20px;
+  margin-top:22px;
 }
 .profile .name{
   font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:.1em;
@@ -530,6 +536,8 @@ footer{
   .defs,.tools{grid-template-columns:1fr}
   .growth{grid-template-columns:repeat(2,1fr)}
   .profile{grid-template-columns:1fr}
+  .profile-photo{max-width:300px;margin:0 auto}
+  .profile-side{text-align:left}
   .flow{flex-direction:column}
   .flow .arr{transform:rotate(90deg)}
 }
@@ -887,8 +895,11 @@ footer{
       <h2>「もし10年前にこれがあったら」<br>と、今でも思う。</h2>
     </div>
     <div class="profile rv">
-      <div class="name-block">
-        <div class="name">三井 隆義<small>TAKAYOSHI MITSUI</small></div>
+      <div class="profile-side">
+        <div class="profile-photo"><img src="assets/mitsui.jpg" alt="三井隆義" loading="lazy"></div>
+        <div class="name-block">
+          <div class="name">三井 隆義<small>TAKAYOSHI MITSUI</small></div>
+        </div>
       </div>
       <div class="bio">
         <div class="career">
