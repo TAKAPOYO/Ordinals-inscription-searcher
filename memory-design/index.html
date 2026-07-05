@@ -342,6 +342,35 @@ p{margin-bottom:1.4em}
 }
 .g-step .g-d{font-size:12.5px;color:var(--mist);line-height:1.7;margin-top:4px}
 
+/* ---------- 実物スクショ ---------- */
+.proof{margin-top:64px}
+.proof-title{
+  font-family:var(--serif);
+  font-weight:700;
+  font-size:clamp(19px,3.2vw,27px);
+  line-height:1.8;
+  letter-spacing:.04em;
+  text-align:center;
+  color:var(--white);
+  margin-bottom:32px;
+}
+.proof-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;
+}
+.proof-grid figure{margin:0}
+.proof-grid img{
+  width:100%;display:block;
+  border-radius:12px;
+  border:1px solid var(--hairline);
+}
+.proof-grid figcaption{
+  font-size:12.5px;color:var(--mist);
+  text-align:center;margin-top:12px;letter-spacing:.04em;
+}
+@media (max-width:760px){
+  .proof-grid{grid-template-columns:1fr}
+}
+
 /* ---------- 時間の数字 ---------- */
 .time-math{
   max-width:620px;margin:40px auto;
@@ -714,6 +743,19 @@ footer{
         <canvas class="gc" data-n="380" data-dense="1" aria-hidden="true"></canvas>
         <div class="g-t">1年</div>
         <div class="g-d">会社を誰よりも知るAI。<br>もう追いつけない差に</div>
+      </div>
+    </div>
+    <div class="proof rv">
+      <p class="proof-title">これはイメージ図ではありません。<br>実際に運用している、AIの記憶の<span class="accent">実物</span>です。</p>
+      <div class="proof-grid">
+        <figure>
+          <img src="assets/graph-real-galaxy.png" alt="実際のObsidianグラフビュー（俯瞰）" loading="lazy">
+          <figcaption>俯瞰 — 数千のメモが星団のように繋がっている</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/graph-real-close.png" alt="実際のObsidianグラフビュー（拡大）" loading="lazy">
+          <figcaption>拡大 — 日々の記録・判断・知識が互いにリンクする</figcaption>
+        </figure>
       </div>
     </div>
     <div class="wrap rv" style="padding:0;margin-top:44px">
