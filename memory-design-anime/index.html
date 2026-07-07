@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEMORY DESIGN | マンガで読む</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=M+PLUS+Rounded+1c:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e0e10;
+    --paper:#f5f2ec;
+    --paper-dim:#eae6dc;
+    --green:#1f4d3a;
+    --green-light:#2f6b4f;
+    --text-dim:#c9c5bc;
+    --text-dark:#2b2822;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Zen Kaku Gothic New", sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:"Shippori Mincho B1", serif; font-weight:700; }
+  .wrap{ max-width:720px; margin:0 auto; padding:0 24px; }
+
+  /* ===== HERO ===== */
+  .hero{
+    padding:90px 20px 70px;
+    text-align:center;
+    background:linear-gradient(180deg, #0e0e10 0%, #14201a 100%);
+  }
+  .hero .eyebrow{
+    font-size:13px;
+    letter-spacing:.25em;
+    color:var(--green-light);
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:clamp(28px, 6vw, 50px);
+    line-height:1.55;
+    margin:0 0 22px;
+  }
+  .hero p{
+    font-size:16px;
+    color:var(--text-dim);
+    max-width:480px;
+    margin:0 auto;
+    line-height:1.9;
+  }
+
+  /* ===== LEAD-IN (dark, stat hook before manga) ===== */
+  .lead{
+    background:var(--ink);
+    padding:10px 20px 70px;
+    text-align:center;
+  }
+  .lead .q{
+    font-size:15px;
+    color:var(--text-dim);
+    line-height:2;
+    max-width:460px;
+    margin:0 auto 28px;
+  }
+  .stat-row{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:0 auto 28px;
+    max-width:520px;
+  }
+  .stat{
+    background:#181a17;
+    border:1px solid #2a2d27;
+    border-radius:10px;
+    padding:20px 16px;
+    flex:1 1 130px;
+  }
+  .stat .num{
+    font-family:"Shippori Mincho B1", serif;
+    font-size:clamp(26px, 5vw, 34px);
+    color:var(--green-light);
+    line-height:1;
+    margin-bottom:8px;
+  }
+  .stat .label{
+    font-size:12px;
+    color:#9c9890;
+    line-height:1.6;
+  }
+  .lead .punch{
+    font-size:16px;
+    line-height:2;
+    color:var(--paper);
+    max-width:460px;
+    margin:0 auto;
+  }
+  .lead .punch strong{ color:var(--green-light); }
+  .scroll-cue{
+    margin-top:36px;
+    font-size:12px;
+    letter-spacing:.2em;
+    color:#6b6860;
+  }
+
+  /* ===== MANGA (unchanged) ===== */
+  .manga-section{
+    background:var(--paper);
+    padding:40px 0 20px;
+  }
+  .manga-page{
+    max-width:900px;
+    margin:0 auto 28px;
+    padding:0 16px;
+  }
+  .manga-page img{
+    display:block;
+    width:100%;
+    height:auto;
+    border-radius:4px;
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+  }
+  .manga-page--final{
+    position:relative;
+  }
+  .final-logo{
+    position:absolute;
+    left:35%;
+    right:13%;
+    bottom:4%;
+    height:13%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:"M PLUS Rounded 1c", sans-serif;
+    font-weight:900;
+    color:var(--green-light);
+    font-size:clamp(22px, 4.4vw, 44px);
+    letter-spacing:.06em;
+    pointer-events:none;
+  }
+
+  /* ===== PAPER SECTION (post-manga, cream bg) ===== */
+  .paper-section{
+    background:var(--paper);
+    color:var(--text-dark);
+    padding:70px 0;
+  }
+  .paper-section.dim{ background:var(--paper-dim); }
+  .section-eyebrow{
+    font-size:12px;
+    letter-spacing:.2em;
+    color:var(--green);
+    text-align:center;
+    margin-bottom:14px;
+  }
+  .section-title{
+    font-size:clamp(22px, 4.6vw, 32px);
+    line-height:1.6;
+    text-align:center;
+    margin:0 0 28px;
+  }
+  .section-body{
+    font-size:15px;
+    line-height:2;
+    color:#4a463d;
+    max-width:560px;
+    margin:0 auto;
+  }
+  .section-body + .section-body{ margin-top:20px; }
+  .section-body strong{ color:var(--text-dark); }
+
+  /* card grids */
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:18px;
+    margin:36px auto 0;
+    max-width:640px;
+  }
+  .card{
+    background:#fff;
+    border:1px solid #e4dfd2;
+    border-radius:12px;
+    padding:24px 20px;
+  }
+  .card h3{
+    font-size:16px;
+    margin:0 0 10px;
+    color:var(--green);
+  }
+  .card p{
+    font-size:13.5px;
+    line-height:1.9;
+    color:#5a564c;
+    margin:0;
+  }
+
+  /* timeline (compound memory) */
+  .timeline{
+    max-width:600px;
+    margin:36px auto 0;
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+  .tl-item{
+    display:flex;
+    gap:20px;
+    padding:18px 0;
+    border-bottom:1px dashed #d8d2c2;
+  }
+  .tl-item:last-child{ border-bottom:none; }
+  .tl-time{
+    flex:0 0 70px;
+    font-family:"Shippori Mincho B1", serif;
+    font-weight:700;
+    color:var(--green);
+    font-size:15px;
+  }
+  .tl-text{
+    font-size:14px;
+    line-height:1.8;
+    color:#4a463d;
+  }
+
+  /* math table */
+  .math-table{
+    max-width:560px;
+    margin:32px auto 0;
+    width:100%;
+  }
+  .math-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid #e4dfd2;
+    font-size:14px;
+  }
+  .math-row .item{ color:#4a463d; }
+  .math-row .val{
+    font-family:"Shippori Mincho B1", serif;
+    font-weight:700;
+    color:var(--green);
+    white-space:nowrap;
+  }
+  .math-total{
+    text-align:center;
+    margin-top:24px;
+    font-size:15px;
+    color:var(--text-dark);
+  }
+  .math-total .big{
+    font-family:"Shippori Mincho B1", serif;
+    font-size:clamp(26px,5vw,34px);
+    color:var(--green);
+    display:block;
+    margin:8px 0;
+  }
+
+  /* steps */
+  .steps{
+    max-width:600px;
+    margin:36px auto 0;
+  }
+  .step{
+    display:flex;
+    gap:20px;
+    margin-bottom:32px;
+  }
+  .step:last-child{ margin-bottom:0; }
+  .step-num{
+    flex:0 0 40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:"Shippori Mincho B1", serif;
+    font-weight:700;
+    font-size:16px;
+  }
+  .step-body h3{
+    font-size:16px;
+    margin:4px 0 8px;
+    color:var(--text-dark);
+  }
+  .step-body p{
+    font-size:13.5px;
+    line-height:1.9;
+    color:#5a564c;
+    margin:0;
+  }
+
+  /* voices */
+  .voice-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+    gap:18px;
+    max-width:680px;
+    margin:36px auto 0;
+  }
+  .voice-card{
+    background:#fff;
+    border:1px solid #e4dfd2;
+    border-radius:12px;
+    padding:26px 22px;
+  }
+  .voice-card .tag{
+    font-size:11px;
+    letter-spacing:.1em;
+    color:var(--green);
+    margin-bottom:10px;
+  }
+  .voice-card .quote{
+    font-family:"Shippori Mincho B1", serif;
+    font-size:15px;
+    line-height:1.8;
+    color:var(--text-dark);
+    margin:0 0 12px;
+  }
+  .voice-card .detail{
+    font-size:12.5px;
+    line-height:1.8;
+    color:#6b675c;
+    margin:0;
+  }
+
+  /* profile */
+  .profile{
+    display:flex;
+    gap:28px;
+    align-items:flex-start;
+    max-width:600px;
+    margin:36px auto 0;
+    flex-wrap:wrap;
+  }
+  .profile-name{
+    flex:1 1 200px;
+  }
+  .profile-name .jp{ font-size:20px; font-weight:700; color:var(--text-dark); margin-bottom:4px; }
+  .profile-name .en{ font-size:12px; letter-spacing:.1em; color:#8a8579; }
+  .profile-text{
+    flex:2 1 320px;
+    font-size:14px;
+    line-height:2;
+    color:#4a463d;
+  }
+
+  /* ===== CTA (dark, final) ===== */
+  .cta-section{
+    background:var(--ink);
+    padding:90px 20px 100px;
+    text-align:center;
+  }
+  .cta-section .title{
+    font-size:clamp(24px, 5vw, 38px);
+    margin:0 0 16px;
+  }
+  .cta-section .sub{
+    color:var(--text-dim);
+    font-size:15px;
+    line-height:1.9;
+    max-width:480px;
+    margin:0 auto 36px;
+  }
+  .cta-button{
+    display:inline-block;
+    background:var(--green-light);
+    color:#fff;
+    text-decoration:none;
+    font-weight:700;
+    font-size:16px;
+    padding:18px 48px;
+    border-radius:999px;
+    letter-spacing:.05em;
+    transition:transform .2s ease, background .2s ease;
+  }
+  .cta-button:hover{
+    background:var(--green);
+    transform:translateY(-2px);
+  }
+  .brand-tag{
+    margin-top:40px;
+    font-size:12px;
+    color:#6b6860;
+    letter-spacing:.15em;
+  }
+
+  /* sticky mini CTA */
+  .sticky-cta{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    background:rgba(14,14,16,.92);
+    backdrop-filter:blur(6px);
+    padding:12px 20px;
+    display:flex;
+    justify-content:center;
+    z-index:50;
+    border-top:1px solid #26281f;
+  }
+  .sticky-cta a{
+    background:var(--green-light);
+    color:#fff;
+    text-decoration:none;
+    font-weight:700;
+    font-size:14px;
+    padding:12px 32px;
+    border-radius:999px;
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="eyebrow">MEMORY DESIGN — MANGA EDITION</div>
+  <h1>体感9割の人が、<br>AIを使いこなせていない。</h1>
+  <p>マンガで5分。あなたのAIが「同僚」に変わるまでの物語。</p>
+</section>
+
+<section class="lead">
+  <div class="wrap">
+    <p class="q">2025年11月、世界最大の経営コンサル会社マッキンゼーが、世界105カ国・約2,000社を対象にした調査を発表した。</p>
+    <div class="stat-row">
+      <div class="stat"><div class="num">88%</div><div class="label">「AIを使っている」<br>と答えた企業</div></div>
+      <div class="stat"><div class="num">6%</div><div class="label">利益に5%以上<br>貢献できている企業</div></div>
+      <div class="stat"><div class="num">82%</div><div class="label">使っているのに<br>成果が出ていない企業</div></div>
+    </div>
+    <p class="punch">10社のうち9社がAIを使い、成果を出せているのは<strong>わずか6%</strong>。<br>この差は、AIの性能じゃない。<br>次のページは、その差の正体に気づいた、ある経営者の物語。</p>
+    <div class="scroll-cue">↓ SCROLL</div>
+  </div>
+</section>
+
+<section class="manga-section">
+  <div class="manga-page"><img src="assets/manga_page_01.png" alt="MEMORY DESIGN マンガ 1ページ目" loading="lazy"></div>
+  <div class="manga-page"><img src="assets/manga_page_02.png" alt="MEMORY DESIGN マンガ 2ページ目" loading="lazy"></div>
+  <div class="manga-page"><img src="assets/manga_page_03.png" alt="MEMORY DESIGN マンガ 3ページ目" loading="lazy"></div>
+  <div class="manga-page"><img src="assets/manga_page_04.png" alt="MEMORY DESIGN マンガ 4ページ目" loading="lazy"></div>
+  <div class="manga-page"><img src="assets/manga_page_05.png" alt="MEMORY DESIGN マンガ 5ページ目" loading="lazy"></div>
+  <div class="manga-page"><img src="assets/manga_page_06.png" alt="MEMORY DESIGN マンガ 6ページ目" loading="lazy"></div>
+  <div class="manga-page manga-page--final">
+    <img src="assets/manga_page_07.png" alt="MEMORY DESIGN マンガ 7ページ目" loading="lazy">
+    <div class="final-logo">MEMORY DESIGN</div>
+  </div>
+</section>
+
+<!-- Why It Stays a Tool -->
+<section class="paper-section">
+  <div class="wrap">
+    <div class="section-eyebrow">WHY IT STAYS A TOOL</div>
+    <h2 class="section-title">なぜあなたのAIは<br>「道具止まり」なのか</h2>
+    <p class="section-body">
+      今日聞いたことを、明日また同じ文脈で聞いたら、相手は覚えていません。昨日話した内容を、今日のAIは知りません。毎回、初対面です。これが<strong>【記憶のないAI】</strong>です。
+    </p>
+    <p class="section-body">
+      どれだけ優秀なコンサルタントでも、あなたの業界の歴史、会社の文化、過去の失敗と成功を知らない人は「教科書通りの答え」しか出せません。だから「便利なんだけど、なんか薄っぺらい」という感覚になる。AIが悪いんじゃありません。<strong>記憶を持たせていないから、答えに厚みが出ない。</strong>それだけです。
+    </p>
+  </div>
+</section>
+
+<!-- Memory & Identity -->
+<section class="paper-section dim">
+  <div class="wrap">
+    <div class="section-eyebrow">MEMORY &amp; IDENTITY</div>
+    <h2 class="section-title">「記憶」と「アイデンティティ」。<br>2つ揃って、右腕になる。</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>MEMORY｜記憶</h3>
+        <p>会社の歴史、過去の判断、今の状況、積み上げてきたもの全部。「うちはこの方針で動いている」が、AIの中に積み上がっていく。</p>
+      </div>
+      <div class="card">
+        <h3>IDENTITY｜アイデンティティ</h3>
+        <p>どういう役割で、何を優先し、何を絶対にしないか。あなたの判断の癖＝文脈が、行動規範として定まっていること。</p>
+      </div>
+    </div>
+    <p class="section-body" style="margin-top:32px;">
+      記憶がないAIは、便利な道具。記憶とアイデンティティがあるAIは、パートナー＝右腕。<strong>この差は3ヶ月後に初めてわかります。</strong>半年後に「やっておいてよかった」と思う。1年後に「やっていなかった人との差」を見て、背筋が凍ります。
+    </p>
+  </div>
+</section>
+
+<!-- Compound Memory -->
+<section class="paper-section">
+  <div class="wrap">
+    <div class="section-eyebrow">COMPOUND MEMORY</div>
+    <h2 class="section-title">記憶は、複利で育つ。</h2>
+    <p class="section-body">積み上がった記憶の上に、次の記憶が積み上がる。あなたのAIの中で、こんなことが起きていきます。</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-time">1ヶ月</div><div class="tl-text">文脈はまだ浅い。答えに一般論が混じる</div></div>
+      <div class="tl-item"><div class="tl-time">3ヶ月</div><div class="tl-text">会社の事情を踏まえた答えが返り始める</div></div>
+      <div class="tl-item"><div class="tl-time">6ヶ月</div><div class="tl-text">判断の記録・顧客情報・業界知識が積層する</div></div>
+      <div class="tl-item"><div class="tl-time">1年</div><div class="tl-text">会社を誰よりも知るAI。もう追いつけない差に</div></div>
+    </div>
+    <p class="section-body" style="margin-top:32px;">
+      今日始めた人が1年後に積み上げている記憶を、来年始めた人は持っていません。<strong>この差は、努力では埋まりません。始めた時期が全てです。</strong>
+    </p>
+  </div>
+</section>
+
+<!-- The Math -->
+<section class="paper-section dim">
+  <div class="wrap">
+    <div class="section-eyebrow">THE MATH</div>
+    <h2 class="section-title">あなたの週13時間は、<br>どこに消えているか。</h2>
+    <div class="math-table">
+      <div class="math-row"><div class="item">調べもの（業界動向・競合・技術情報）</div><div class="val">週5時間</div></div>
+      <div class="math-row"><div class="item">資料・文章作成（提案書・メール・発信）</div><div class="val">週3時間</div></div>
+      <div class="math-row"><div class="item">打ち合わせ準備（前回確認・論点整理）</div><div class="val">週2時間</div></div>
+      <div class="math-row"><div class="item">情報整理・記録（日報・議事録・メモ）</div><div class="val">週3時間</div></div>
+    </div>
+    <div class="math-total">
+      合計
+      <span class="big">週13時間</span>
+      仮に半分になっても、月25〜28時間が返ってくる。<br>あなたの1時間が3万円の価値を生むなら――<strong>月75〜84万円分の機会</strong>です。
+    </div>
+  </div>
+</section>
+
+<!-- What I Do -->
+<section class="paper-section">
+  <div class="wrap">
+    <div class="section-eyebrow">WHAT I DO</div>
+    <h2 class="section-title">あなたのAIに<br>記憶とアイデンティティを宿らせる設計士</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>文脈を整理し、AIが読める形に構造化する</h3>
+          <p>仕事の内容、クライアント、積み上げてきた判断基準を整理。「言語化されていなかった判断軸」が初めて形になります。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>記憶が積み上がる仕組みを作る</h3>
+          <p>技術的な部分は全部やります。あなたは「どういうAIにしたいか」を話してくれればいい。今日から動く状態で引き渡します。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>自律的に動き始めるまで、3ヶ月伴走する</h3>
+          <p>仕組みを作って終わりじゃない。3ヶ月間、育つのを一緒に見ます。3ヶ月経ったら、私は必要なくなる。それでいいんです。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Voices -->
+<section class="paper-section dim">
+  <div class="wrap">
+    <div class="section-eyebrow">VOICES</div>
+    <h2 class="section-title">3ヶ月後、全員がこう言います。<br>「もっと早くやればよかった」</h2>
+    <div class="voice-grid">
+      <div class="voice-card">
+        <div class="tag">飲食業・経営者</div>
+        <p class="quote">「店に入る前から、今日のゲームプランが全部見えている」</p>
+        <p class="detail">前日の売上と仕込み量、シフトのコメントから始まり、今は発注タイミング・人件費・来月の予測まで朝のブリーフに含まれる。</p>
+      </div>
+      <div class="voice-card">
+        <div class="tag">税理士事務所・所長</div>
+        <p class="quote">「顧問先から呼ばれる前に、こちらから声をかけられるようになった」</p>
+        <p class="detail">顧問先情報の積み上げで、「来月資金繰りが厳しくなるかも」という予兆をAIが先に拾えるように。</p>
+      </div>
+      <div class="voice-card">
+        <div class="tag">経営コンサルタント</div>
+        <p class="quote">「打ち合わせに入る前に、仮説が3本立っている」</p>
+        <p class="detail">頭の使いどころが「思い出す」から「決める」に変わり、提案の質そのものが上がった。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Profile -->
+<section class="paper-section">
+  <div class="wrap">
+    <div class="section-eyebrow">PROFILE</div>
+    <h2 class="section-title">「もし10年前にこれがあったら」と、<br>今でも思う。</h2>
+    <div class="profile">
+      <div class="profile-name">
+        <div class="jp">三井 隆義</div>
+        <div class="en">TAKAYOSHI MITSUI</div>
+      </div>
+      <div class="profile-text">
+        飲食業界28年（経営者14年）→ 会計事務所3年 → AI経営コンサルタント。<br><br>
+        飲食の現場で14年、経営者として立ち続けた。時間がなかった。情報がバラバラだった。決断する材料を集めるだけで、1日が終わることがあった。その後、会計事務所で3年、経営者の「数字の裏側」を見続けた。数字が悪いのは判断が遅かったからじゃない。<strong>「決断する材料が揃っていなかった」から</strong>、判断が遅れていた。
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="title">貴方のAIを、世界一の右腕にする。</div>
+  <p class="sub">気づいたその日が、最短・最速です。<br>初回は、話を聞くところから始めます。<br>『 MEMORY DESIGN 』</p>
+  <a class="cta-button" href="https://form.run/@taka3210" target="_blank" rel="noopener">面談を申し込む</a>
+  <div class="brand-tag">MEMORY DESIGN</div>
+</section>
+
+<div class="sticky-cta">
+  <a href="https://form.run/@taka3210" target="_blank" rel="noopener">面談を申し込む</a>
+</div>
+
+</body>
+</html>
