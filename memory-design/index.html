@@ -33,7 +33,7 @@
   --sans:'Zen Kaku Gothic New', sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html,body{overflow-x:hidden}
 body{
   font-family:var(--sans);
   color:var(--ink);
@@ -543,6 +543,83 @@ footer{
   text-align:center;padding:34px 24px;font-size:12px;letter-spacing:.08em;
 }
 
+/* ---------- HUD計器（スクロール＝記憶が育つ） ---------- */
+.hud{
+  position:fixed;left:18px;top:0;bottom:0;z-index:70;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;gap:16px;
+  mix-blend-mode:difference;color:#fff;pointer-events:none;
+}
+.hud .track{width:1px;height:30vh;background:rgba(255,255,255,.28);position:relative}
+.hud .fill{position:absolute;top:0;left:0;width:1px;height:0%;background:#fff}
+.hud .pct,.hud .nodes{font-size:10px;letter-spacing:.18em;writing-mode:vertical-rl;white-space:nowrap;font-weight:700}
+.hud-mobile{display:none}
+@media (max-width:920px){
+  .hud{display:none}
+  .hud-mobile{
+    display:block;position:fixed;top:0;left:0;right:0;z-index:70;
+    mix-blend-mode:difference;color:#fff;pointer-events:none;
+    font-size:10px;letter-spacing:.14em;font-weight:700;
+    padding:8px 14px 6px;
+  }
+  .hud-mobile .row{display:flex;justify-content:space-between}
+  .hud-mobile .bar{height:1px;background:rgba(255,255,255,.28);margin-top:6px;position:relative}
+  .hud-mobile .bar i{position:absolute;left:0;top:0;bottom:0;width:0%;background:#fff}
+}
+
+/* ---------- ヒーロー文字リビール ---------- */
+.hero h1 .ch-s{
+  display:inline-block;opacity:0;transform:translateY(.3em);filter:blur(5px);
+  transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1),filter .7s ease;
+}
+.hero.on h1 .ch-s{opacity:1;transform:none;filter:blur(0)}
+.hero .hero-hook,.hero .hero-sub,.hero .hero-cta-w{opacity:0;transform:translateY(14px);transition:opacity 1s ease,transform 1s ease}
+.hero.on .hero-hook{opacity:1;transform:none;transition-delay:.7s}
+.hero.on .hero-sub{opacity:1;transform:none;transition-delay:.95s}
+.hero.on .hero-cta-w{opacity:1;transform:none;transition-delay:1.2s}
+@media (prefers-reduced-motion:reduce){
+  .hero h1 .ch-s,.hero .hero-hook,.hero .hero-sub,.hero .hero-cta-w{opacity:1;transform:none;filter:none;transition:none}
+}
+
+/* ---------- 忘却チャットデモ ---------- */
+.chat-demo{
+  max-width:520px;margin:40px auto 8px;
+  background:#fff;border:1px solid #E3E8E1;border-radius:16px;
+  padding:24px 22px 18px;
+  box-shadow:0 20px 60px rgba(28,36,32,.10);
+  min-height:260px;
+}
+.chat-demo .head{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.18em;color:var(--mist);margin-bottom:16px;font-weight:700}
+.bub{max-width:86%;padding:11px 17px;border-radius:14px;font-size:13.5px;line-height:1.8;margin-bottom:11px;opacity:0}
+.bub.user{margin-left:auto;background:var(--deep);color:#fff;border-bottom-right-radius:4px}
+.bub.ai{background:#EFF3EE;color:var(--ink-soft);border-bottom-left-radius:4px}
+.chat-day{text-align:center;font-size:10px;letter-spacing:.3em;color:var(--mist);margin:14px 0;opacity:0;font-weight:700}
+@keyframes bubIn{0%{opacity:0;transform:translateY(10px)}7%{opacity:1;transform:none}38%{opacity:1;filter:blur(0)}48%{opacity:0;filter:blur(8px)}100%{opacity:0}}
+@keyframes dayIn{0%,46%{opacity:0}54%,84%{opacity:1}94%,100%{opacity:0}}
+@keyframes bub2In{0%,58%{opacity:0;transform:translateY(10px)}66%{opacity:1;transform:none}96%{opacity:1}100%{opacity:0}}
+.chat-demo.play .b1{animation:bubIn 7.5s ease infinite}
+.chat-demo.play .b2{animation:bubIn 7.5s ease .6s infinite}
+.chat-demo.play .chat-day{animation:dayIn 7.5s ease infinite}
+.chat-demo.play .b3{animation:bub2In 7.5s ease infinite}
+.chat-cap{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-bottom:2em}
+@media (prefers-reduced-motion:reduce){
+  .chat-demo.play .b1,.chat-demo.play .b2,.chat-demo.play .b3,.chat-demo.play .chat-day{animation:none;opacity:1}
+}
+
+/* ---------- メタ種明かし ---------- */
+.meta-reveal{
+  border:1px solid rgba(93,199,154,.4);border-radius:16px;
+  background:rgba(93,199,154,.05);
+  padding:38px 30px;text-align:center;margin:48px 0 8px;
+}
+.meta-reveal .big{
+  font-family:var(--serif);font-weight:800;
+  font-size:clamp(44px,8vw,80px);color:var(--glow);
+  line-height:1.15;display:block;margin:8px 0 2px;
+  text-shadow:0 0 40px rgba(93,199,154,.45);
+}
+.meta-reveal .unit{font-size:11px;color:var(--mist);letter-spacing:.24em;font-weight:700;display:block}
+.meta-reveal p{margin:16px 0 0;font-size:14px;color:#C7D2CA}
+
 /* ---------- 追従CTA ---------- */
 .sticky-cta{
   position:fixed;right:20px;bottom:20px;z-index:60;
@@ -560,6 +637,9 @@ footer{
 }
 
 /* ---------- レスポンシブ ---------- */
+@media (max-width:480px){
+  .brand-line{font-size:6.6vw;letter-spacing:.06em}
+}
 @media (max-width:760px){
   section{padding:72px 0}
   .stats{grid-template-columns:1fr}
@@ -576,19 +656,31 @@ footer{
 </head>
 <body>
 
+<!-- HUD：スクロールに連動して記憶ノードを数える計器 -->
+<div class="hud" aria-hidden="true">
+  <span class="pct" id="hudPct">MEMORY 000%</span>
+  <div class="track"><div class="fill" id="hudFill"></div></div>
+  <span class="nodes">NODES <span id="hudNodes">0000</span></span>
+</div>
+<div class="hud-mobile" aria-hidden="true">
+  <div class="row"><span>MEMORY DESIGN</span><span>NODES <span id="hudNodesM">0000</span></span></div>
+  <div class="bar"><i id="hudFillM"></i></div>
+</div>
+
 <!-- ============ HERO（夜：記憶のグラフが育つ） ============ -->
-<header class="hero sec-dark">
+<header class="hero sec-dark" id="hero">
   <canvas id="graph" aria-hidden="true"></canvas>
   <div class="hero-inner">
     <span class="eyebrow">経営者のための AI記憶設計</span>
     <div class="hero-brand"><span class="brand-line">『 MEMORY DESIGN 』</span></div>
     <p class="hero-hook">体感9割の人が、AIを使いこなせていない。</p>
-    <h1>貴方のAIを、<br>世界一の右腕にする。</h1>
+    <h1 id="heroTitle">貴方のAIを、<br>世界一の右腕にする。</h1>
     <p class="hero-sub">AIに連続した記憶とアイデンティティを宿らせ、経営者の文脈と判断の癖を覚えさせることにより、最高の相棒にするサービスです。</p>
-    <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
-    <p class="note" style="margin-top:16px;color:var(--mist)">初回1時間・無料・オンライン。売り込みはしません。</p>
+    <div class="hero-cta-w">
+      <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+      <p class="note" style="margin-top:16px;color:var(--mist)">初回1時間・無料・オンライン。売り込みはしません。</p>
+    </div>
   </div>
-  <div class="hero-scrollcue">SCROLL</div>
 </header>
 
 <!-- ============ 共感導入＋マッキンゼー（夜つづき） ============ -->
@@ -608,15 +700,15 @@ footer{
     </div>
     <div class="stats rv">
       <div class="stat">
-        <span class="num">88<small style="font-size:.45em">%</small></span>
+        <span class="num" data-to="88"><b class="cnt">0</b><small style="font-size:.45em">%</small></span>
         <span class="lbl">「AIを使っている」<br>と答えた企業</span>
       </div>
       <div class="stat is-green">
-        <span class="num">6<small style="font-size:.45em">%</small></span>
+        <span class="num" data-to="6"><b class="cnt">0</b><small style="font-size:.45em">%</small></span>
         <span class="lbl">利益（EBIT）に5%以上<br>貢献できている企業</span>
       </div>
       <div class="stat">
-        <span class="num">82<small style="font-size:.45em">%</small></span>
+        <span class="num" data-to="82"><b class="cnt">0</b><small style="font-size:.45em">%</small></span>
         <span class="lbl">使っているのに<br>成果が出ていない企業</span>
       </div>
     </div>
@@ -677,6 +769,16 @@ footer{
       <p class="lead">今、どんなふうにAIを使っているか、振り返ってみてください。</p>
       <p>「うちは飲食業で、スタッフが〇人いて、今の課題は人手不足で……」<br>「会社を経営していて、売上は横ばいで、来期どう動くか悩んでいて……」<br>「クリニックをやっていて、日中は診療、夜は書類とスタッフの悩みで……」</p>
       <p><strong>この説明、先週も同じことを打ち込んでいませんでしたか？</strong></p>
+    </div>
+    <div class="chat-demo rv" id="chatDemo">
+      <div class="head"><span>AI CHAT</span><span>MEMORY: OFF</span></div>
+      <div class="bub user b1">うちは飲食業で、スタッフが12人いて、今の課題は人手不足で……</div>
+      <div class="bub ai b2">ご状況ありがとうございます。一般的には、採用チャネルの見直しと定着施策が有効です。</div>
+      <div class="chat-day">— 翌日 —</div>
+      <div class="bub user b3">うちは飲食業で、スタッフが12人いて……（また最初から）</div>
+    </div>
+    <p class="chat-cap rv">昨日話したことを、今日のAIは知りません。</p>
+    <div class="rv">
       <p>今日聞いたことを、明日また同じ文脈で聞いたら、相手は覚えていません。昨日話した内容を、今日のAIは知りません。<span class="accent">毎回、初対面です。</span></p>
       <p>これが【記憶のないAI】です。どれだけ優秀なコンサルタントでも、あなたの業界の歴史、会社の文化、過去の失敗と成功を知らない人は「教科書通りの答え」しか出せません。だから「便利なんだけど、なんか薄っぺらい」という感覚になるんです。</p>
       <p>これはAIが悪いんじゃありません。</p>
@@ -1013,6 +1115,8 @@ footer{
   &copy; 2026 Takayoshi Mitsui
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 <script>
 /* ============================================================
    署名要素：記憶のグラフ・アニメーション
@@ -1021,6 +1125,32 @@ footer{
    ============================================================ */
 (function(){
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- スクロール進捗（全編で共有・HUD計器） ---------- */
+  let progRaw = 0, prog = 0;
+  function calcProg(){
+    const m = document.documentElement.scrollHeight - innerHeight;
+    progRaw = m > 0 ? Math.min(1, scrollY / m) : 0;
+  }
+  calcProg(); addEventListener('scroll', calcProg, {passive:true});
+  const VIRT = 430;
+  const hudPct = document.getElementById('hudPct');
+  const hudFill = document.getElementById('hudFill');
+  const hudNodes = document.getElementById('hudNodes');
+  const hudFillM = document.getElementById('hudFillM');
+  const hudNodesM = document.getElementById('hudNodesM');
+  const liveCount = document.getElementById('liveCount');
+  (function hudLoop(){
+    prog += (progRaw - prog) * (reduced ? 1 : .08);
+    const pc = Math.round(prog*100), nd = Math.round(VIRT*prog);
+    if(hudPct) hudPct.textContent = 'MEMORY ' + String(pc).padStart(3,'0') + '%';
+    if(hudFill) hudFill.style.height = pc + '%';
+    if(hudNodes) hudNodes.textContent = String(nd).padStart(4,'0');
+    if(hudFillM) hudFillM.style.width = pc + '%';
+    if(hudNodesM) hudNodesM.textContent = String(nd).padStart(4,'0');
+    if(liveCount) liveCount.textContent = nd;
+    requestAnimationFrame(hudLoop);
+  })();
 
   function initGraph(canvas, opts){
     const ctx = canvas.getContext('2d');
@@ -1068,11 +1198,13 @@ footer{
     const initial = reduced ? MAX : Math.floor(MAX*0.15);
     for(let i=0;i<initial;i++) addNode();
 
-    let last = 0, addTimer = 0;
+    let last = 0;
     function frame(t){
       if(!reduced){
-        addTimer += (t-last)||16;
-        if(addTimer > opts.interval && nodes.length < MAX){ addNode(); addTimer = 0; }
+        /* スクロール量に比例して育つ（時間ではなく読んだ分だけ） */
+        const target = Math.min(MAX, Math.max(initial, Math.floor(initial + (MAX - initial) * prog)));
+        let guard = 0;
+        while(nodes.length < target && guard++ < 6){ addNode(); }
         // まれに既存ノードが緑に灯る（記憶が参照される瞬間）
         if(Math.random()<.012 && nodes.length){
           nodes[Math.floor(Math.random()*nodes.length)].pulse = 1;
@@ -1118,10 +1250,147 @@ footer{
     requestAnimationFrame(frame);
   }
 
+  /* ============================================================
+     ヒーロー：three.js 3D記憶星団
+     スクロールで育ち、マウスで視差回転する。
+     three.js が読めない環境では2D版にフォールバック。
+     ============================================================ */
+  function init3D(canvas){
+    const isMobile = matchMedia('(max-width:760px)').matches;
+    const N = isMobile ? 220 : 460;
+    const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio||1, 2));
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(55, 1, 1, 500);
+    cam.position.z = 95;
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const rnd = (s=>()=> (s=(s*9301+49297)%233280)/233280)(4242);
+
+    /* 星団のハブ＋周辺ノード */
+    const hubs = [];
+    for(let h=0;h<9;h++){
+      hubs.push(new THREE.Vector3((rnd()-.5)*110,(rnd()-.5)*70,(rnd()-.5)*70));
+    }
+    const pos = new Float32Array(N*3);
+    const pts = [];
+    for(let i=0;i<N;i++){
+      let p;
+      if(rnd() < .72){
+        const hb = hubs[Math.floor(rnd()*hubs.length)];
+        p = new THREE.Vector3(hb.x+(rnd()-.5)*36, hb.y+(rnd()-.5)*30, hb.z+(rnd()-.5)*30);
+      }else{
+        p = new THREE.Vector3((rnd()-.5)*150,(rnd()-.5)*95,(rnd()-.5)*95);
+      }
+      pts.push(p);
+      pos[i*3]=p.x; pos[i*3+1]=p.y; pos[i*3+2]=p.z;
+    }
+
+    /* 丸い点スプライト */
+    const sp = document.createElement('canvas'); sp.width=sp.height=64;
+    const sc2 = sp.getContext('2d');
+    const gr = sc2.createRadialGradient(32,32,0,32,32,32);
+    gr.addColorStop(0,'rgba(255,255,255,1)');
+    gr.addColorStop(.4,'rgba(255,255,255,.7)');
+    gr.addColorStop(1,'rgba(255,255,255,0)');
+    sc2.fillStyle=gr; sc2.fillRect(0,0,64,64);
+    const tex = new THREE.CanvasTexture(sp);
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    const points = new THREE.Points(geo, new THREE.PointsMaterial({
+      size:2.4, map:tex, color:0xC8D4CA, transparent:true, opacity:.85,
+      depthWrite:false, sizeAttenuation:true
+    }));
+    group.add(points);
+
+    /* 直近ノードの緑グロー（drawRangeの窓で最新だけ光る） */
+    const geoG = new THREE.BufferGeometry();
+    geoG.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    const glow = new THREE.Points(geoG, new THREE.PointsMaterial({
+      size:6, map:tex, color:0x5DC79A, transparent:true, opacity:.9,
+      depthWrite:false, blending:THREE.AdditiveBlending, sizeAttenuation:true
+    }));
+    group.add(glow);
+
+    /* 近傍リンク */
+    const lp = [], linkBirth = [];
+    for(let i=1;i<N;i++){
+      let best=-1, bd=1e9, second=-1, sd=1e9;
+      for(let j=0;j<i;j++){
+        const d = pts[i].distanceToSquared(pts[j]);
+        if(d<bd){ second=best; sd=bd; best=j; bd=d; }
+        else if(d<sd){ second=j; sd=d; }
+      }
+      if(best>=0 && bd<26*26){ lp.push(pts[i],pts[best]); linkBirth.push(i); }
+      if(second>=0 && sd<20*20 && rnd()<.5){ lp.push(pts[i],pts[second]); linkBirth.push(i); }
+    }
+    const geoL = new THREE.BufferGeometry().setFromPoints(lp);
+    const lines = new THREE.LineSegments(geoL, new THREE.LineBasicMaterial({
+      color:0x9DB8AA, transparent:true, opacity:.14
+    }));
+    group.add(lines);
+
+    function resize(){
+      const w = canvas.clientWidth || canvas.parentElement.clientWidth;
+      const h = canvas.clientHeight || canvas.parentElement.clientHeight;
+      renderer.setSize(w,h,false);
+      cam.aspect = w/h; cam.updateProjectionMatrix();
+    }
+    resize(); addEventListener('resize', resize);
+
+    /* マウス視差 */
+    let mx=0,my=0,tx=0,ty=0;
+    if(!isMobile){
+      addEventListener('pointermove', e=>{
+        tx = (e.clientX/innerWidth - .5) * .5;
+        ty = (e.clientY/innerHeight - .5) * .35;
+      },{passive:true});
+    }
+
+    /* 画面外では描画停止 */
+    let onScreen = true;
+    new IntersectionObserver(es=>{ es.forEach(e=>{ onScreen = e.isIntersecting; }); },{threshold:0}).observe(canvas);
+
+    const GROW_MIN = Math.floor(N*.16);
+    function loop(t){
+      requestAnimationFrame(loop);
+      if(!onScreen) return;
+      /* ヒーローは前半で見えるので、ページ前半で全成長するよう係数をかける */
+      const k = Math.min(1, prog*2.2);
+      const visible = reduced ? N : Math.min(N, Math.max(GROW_MIN, Math.floor(GROW_MIN + (N-GROW_MIN)*k)));
+      geo.setDrawRange(0, visible);
+      const win = Math.max(0, visible-14);
+      geoG.setDrawRange(win, visible-win);
+      let li=0; while(li<linkBirth.length && linkBirth[li]<visible) li++;
+      geoL.setDrawRange(0, li*2);
+      if(!reduced){
+        group.rotation.y += .0007;
+        mx += (tx-mx)*.04; my += (ty-my)*.04;
+        group.rotation.x = my;
+        group.rotation.z = mx*.15;
+        const s = 1+Math.sin(t*.0003)*.02;
+        group.scale.set(s,s,s);
+      }
+      renderer.render(scene,cam);
+    }
+    requestAnimationFrame(loop);
+  }
+
   const g1 = document.getElementById('graph');
-  if(g1) initGraph(g1, {max:150, interval:600});
+  if(g1){
+    if(window.THREE){ init3D(g1); }
+    else{ initGraph(g1, {max:150, interval:600}); }
+  }
   const g2 = document.getElementById('graph2');
   if(g2) initGraph(g2, {max:90, interval:900});
+
+  /* ---------- 慣性スクロール（Lenis） ---------- */
+  if(!reduced && window.Lenis){
+    const lenis = new Lenis({duration:1.1, smoothWheel:true});
+    (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
+  }
 
   /* ---------- 複利ミニグラフ（静的・シード付き） ---------- */
   function seeded(s){ return function(){ s=(s*9301+49297)%233280; return s/233280; }; }
@@ -1129,7 +1398,7 @@ footer{
     const n = +cv.dataset.n;
     const dense = !!cv.dataset.dense; // 1年：星団構造でさらに複雑に
     const dpr = Math.min(devicePixelRatio||1,2);
-    const draw = ()=>{
+    const draw = (k=1)=>{
       const s = cv.clientWidth;
       cv.width = s*dpr; cv.height = s*dpr;
       const c = cv.getContext('2d');
@@ -1157,13 +1426,15 @@ footer{
         }
         pts.push({x, y, r:r2()<.1?2.2:0.8+r2()*1.1});
       }
+      const m = Math.max(2, Math.floor(n*k));
+      const vis = pts.slice(0, m);
       c.lineWidth=.5;
       const linkR = s*(dense?.12:.16);
-      for(let i=0;i<pts.length;i++){
-        let best=[], p=pts[i];
-        for(let j=0;j<pts.length;j++){
+      for(let i=0;i<vis.length;i++){
+        let best=[], p=vis[i];
+        for(let j=0;j<vis.length;j++){
           if(i===j) continue;
-          const q=pts[j], dd=(p.x-q.x)**2+(p.y-q.y)**2;
+          const q=vis[j], dd=(p.x-q.x)**2+(p.y-q.y)**2;
           if(dd < linkR*linkR) best.push(q);
         }
         best.slice(0,3).forEach(q=>{
@@ -1171,14 +1442,32 @@ footer{
           c.beginPath(); c.moveTo(p.x,p.y); c.lineTo(q.x,q.y); c.stroke();
         });
       }
-      pts.forEach((p,i)=>{
-        const green = i > n*0.82; // 直近の記憶は緑
+      vis.forEach((p,i)=>{
+        const green = i > m*0.82; // 直近の記憶は緑
         c.fillStyle = green ? 'rgba(93,199,154,.95)' : 'rgba(200,212,202,.8)';
         c.beginPath(); c.arc(p.x,p.y,p.r,0,7); c.fill();
       });
     };
-    draw();
-    addEventListener('resize', draw);
+    if(reduced){
+      draw();
+    }else{
+      /* 見えた瞬間に0→100%で描画される */
+      draw(0.02);
+      const ioG = new IntersectionObserver(es=>{
+        es.forEach(e=>{
+          if(!e.isIntersecting) return;
+          ioG.unobserve(cv);
+          const t0 = performance.now(), dur = 1500;
+          (function tk(t){
+            const k = Math.min(1,(t-t0)/dur);
+            draw(1-Math.pow(1-k,2));
+            if(k<1) requestAnimationFrame(tk);
+          })(t0);
+        });
+      },{threshold:.5});
+      ioG.observe(cv);
+    }
+    addEventListener('resize', ()=>draw());
   });
 
   /* ---------- スクロールリビール ---------- */
@@ -1203,6 +1492,61 @@ footer{
     io2.observe(finalSec);
   }
   addEventListener('scroll', updateSticky, {passive:true});
+
+  /* ---------- ヒーロー文字リビール（<br>は保持） ---------- */
+  const h1 = document.getElementById('heroTitle');
+  if(h1 && !reduced){
+    const frag = document.createDocumentFragment();
+    let idx = 0;
+    [...h1.childNodes].forEach(nd=>{
+      if(nd.nodeType === 3){
+        [...nd.textContent].forEach(ch=>{
+          const s = document.createElement('span');
+          s.className = 'ch-s';
+          s.style.transitionDelay = (idx*36)+'ms';
+          s.textContent = ch;
+          frag.appendChild(s); idx++;
+        });
+      }else{
+        frag.appendChild(nd.cloneNode(false));
+      }
+    });
+    h1.textContent = '';
+    h1.appendChild(frag);
+  }
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const he = document.getElementById('hero');
+    if(he) he.classList.add('on');
+  }));
+
+  /* ---------- 統計カウントアップ ---------- */
+  const ioStat = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const el = e.target;
+      ioStat.unobserve(el);
+      const to = +el.dataset.to;
+      const c = el.querySelector('.cnt');
+      if(!c) return;
+      if(reduced){ c.textContent = to; return; }
+      const t0 = performance.now(), dur = 1500;
+      (function tk(t){
+        const k = Math.min(1,(t-t0)/dur);
+        c.textContent = Math.round(to*(1-Math.pow(1-k,3)));
+        if(k<1) requestAnimationFrame(tk);
+      })(t0);
+    });
+  },{threshold:.6});
+  document.querySelectorAll('.stat .num[data-to]').forEach(el=>ioStat.observe(el));
+
+  /* ---------- 忘却チャットの再生 ---------- */
+  const chatD = document.getElementById('chatDemo');
+  if(chatD){
+    const ioC = new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){ chatD.classList.add('play'); ioC.unobserve(chatD); } });
+    },{threshold:.4});
+    ioC.observe(chatD);
+  }
 })();
 </script>
 </body>
