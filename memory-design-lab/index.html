@@ -33,6 +33,7 @@
   --sans:'Zen Kaku Gothic New', sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden}
 body{
   font-family:var(--sans);
   color:var(--ink);
@@ -636,6 +637,9 @@ footer{
 }
 
 /* ---------- レスポンシブ ---------- */
+@media (max-width:480px){
+  .brand-line{font-size:6.6vw;letter-spacing:.06em}
+}
 @media (max-width:760px){
   section{padding:72px 0}
   .stats{grid-template-columns:1fr}
