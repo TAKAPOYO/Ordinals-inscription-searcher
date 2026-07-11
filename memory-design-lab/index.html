@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEMORY DESIGN｜スクロールすると、記憶が育つ。</title>
+<meta name="description" content="あなたのAIは、昨日のあなたを覚えていない。AIに記憶とアイデンティティを宿らせる設計サービス MEMORY DESIGN。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   MEMORY DESIGN — LAB
+   コンセプト：「スクロール＝記憶が育つ時間」
+   背後の固定キャンバスで、スクロール量に比例して
+   記憶の星座が決定論的に育つ。読み終える頃、夜が明ける。
+   ============================================================ */
+:root{
+  --void:#070C0A;
+  --pine:#0E1A14;
+  --moss:#1C3327;
+  --signal:#3FE08F;
+  --signal-dim:#1E7A4E;
+  --faint:#9DB8AA;
+  --white:#F2FAF5;
+  --dawn:#F2E9DB;
+  --dawn-2:#EADFCB;
+  --gold:#D9A94E;
+  --ink:#231F18;
+  --ink-soft:#5C5546;
+  --hair:rgba(157,184,170,.14);
+  --serif:'Zen Old Mincho', serif;
+  --sans:'Zen Kaku Gothic New', sans-serif;
+  --mono:'IBM Plex Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--void);
+  color:var(--white);
+  line-height:2.0;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%}
+a{color:inherit}
+::selection{background:var(--signal);color:var(--void)}
+
+/* ---------- 背後の記憶キャンバス ---------- */
+#mem{
+  position:fixed;inset:0;
+  width:100%;height:100%;
+  z-index:0;
+  display:block;
+}
+
+/* ---------- HUD（計器盤） ---------- */
+.hud{
+  position:fixed;left:22px;top:0;bottom:0;
+  z-index:40;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  gap:18px;
+  font-family:var(--mono);
+  color:var(--faint);
+  pointer-events:none;
+  transition:color .8s ease;
+}
+.hud .track{
+  width:1px;height:34vh;
+  background:var(--hair);
+  position:relative;
+  transition:background .8s ease;
+}
+.hud .fill{
+  position:absolute;top:0;left:0;width:1px;height:0%;
+  background:var(--signal);
+  box-shadow:0 0 8px rgba(63,224,143,.7);
+  transition:background .8s ease;
+}
+.hud .pct,.hud .nodes{
+  font-size:10px;letter-spacing:.14em;
+  writing-mode:vertical-rl;
+  white-space:nowrap;
+}
+.hud .nodes b{color:var(--signal);font-weight:600;transition:color .8s ease}
+body.dawn-mode .hud{color:var(--ink-soft)}
+body.dawn-mode .hud .track{background:rgba(35,31,24,.18)}
+body.dawn-mode .hud .fill{background:var(--gold);box-shadow:none}
+body.dawn-mode .hud .nodes b{color:var(--gold)}
+
+/* モバイルHUD：上部ヘアライン */
+.hud-mobile{
+  display:none;
+  position:fixed;top:0;left:0;right:0;z-index:40;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+  color:var(--faint);
+  padding:10px 16px 8px;
+  background:linear-gradient(180deg,rgba(7,12,10,.85),transparent);
+  pointer-events:none;
+}
+.hud-mobile .bar{
+  height:1px;background:var(--hair);margin-top:8px;position:relative;
+}
+.hud-mobile .bar i{
+  position:absolute;left:0;top:0;bottom:0;width:0%;
+  background:var(--signal);
+}
+.hud-mobile .row{display:flex;justify-content:space-between}
+.hud-mobile b{color:var(--signal);font-weight:600}
+body.dawn-mode .hud-mobile{color:var(--ink-soft);background:none}
+body.dawn-mode .hud-mobile b{color:var(--gold)}
+body.dawn-mode .hud-mobile .bar i{background:var(--gold)}
+
+/* ---------- 章の骨格 ---------- */
+.ch{
+  position:relative;z-index:2;
+  padding:19vh 24px;
+}
+.ch-inner{max-width:760px;margin:0 auto;position:relative}
+.ch-label{
+  position:absolute;right:-72px;top:6px;
+  writing-mode:vertical-rl;
+  font-family:var(--serif);font-weight:700;
+  font-size:12px;letter-spacing:.5em;
+  color:var(--faint);opacity:.55;
+  white-space:nowrap;
+}
+.mono-eyebrow{
+  font-family:var(--mono);
+  font-size:11px;letter-spacing:.3em;
+  color:var(--signal);
+  text-transform:uppercase;
+  display:block;margin-bottom:22px;
+}
+h2{
+  font-family:var(--serif);
+  font-weight:900;
+  font-size:clamp(30px,5.4vw,54px);
+  line-height:1.5;
+  letter-spacing:.045em;
+  margin-bottom:30px;
+  color:var(--white);
+}
+p{margin-bottom:1.5em;color:#C4D4CA}
+strong{color:var(--white);font-weight:700}
+.accent{color:var(--signal);font-weight:700}
+.note{font-size:12.5px;color:var(--faint);line-height:1.9}
+.pull{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(21px,3.8vw,32px);
+  line-height:1.8;letter-spacing:.05em;
+  color:var(--white);
+  text-align:center;
+  padding:26px 0;
+}
+
+/* リビール */
+.rv{opacity:0;transform:translateY(26px);transition:opacity 1s cubic-bezier(.2,.6,.2,1),transform 1s cubic-bezier(.2,.6,.2,1)}
+.rv.on{opacity:1;transform:none}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;z-index:2;
+  min-height:100svh;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:120px 24px 90px;
+}
+.hero-inner{max-width:880px;margin:0 auto;width:100%}
+.hero .mono-eyebrow{margin-bottom:34px}
+.hero h1{
+  font-family:var(--serif);
+  font-weight:900;
+  font-size:clamp(38px,8.4vw,92px);
+  line-height:1.32;
+  letter-spacing:.05em;
+  color:var(--white);
+  margin-bottom:36px;
+}
+.hero h1 .ch-s{
+  display:inline-block;
+  opacity:0;transform:translateY(.35em);
+  filter:blur(6px);
+  transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1),filter .7s ease;
+}
+.hero.on h1 .ch-s{opacity:1;transform:none;filter:blur(0)}
+.hero-sub{
+  max-width:520px;
+  font-size:clamp(14.5px,2.2vw,17px);
+  color:#AFC4B7;
+  margin-bottom:48px;
+  opacity:0;transition:opacity 1.2s ease .9s;
+}
+.hero.on .hero-sub{opacity:1}
+.hero-cta{opacity:0;transition:opacity 1.2s ease 1.2s}
+.hero.on .hero-cta{opacity:1}
+.hero-scroll{
+  position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+  font-family:var(--mono);font-size:10px;letter-spacing:.3em;
+  color:var(--faint);
+  writing-mode:vertical-rl;
+  opacity:0;transition:opacity 1.2s ease 1.6s;
+}
+.hero.on .hero-scroll{opacity:1}
+.hero-scroll::after{
+  content:"";display:block;width:1px;height:52px;
+  background:linear-gradient(var(--signal),transparent);
+  margin:12px auto 0;
+  animation:drip 2.4s ease-in-out infinite;
+}
+@keyframes drip{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+
+/* ---------- ボタン ---------- */
+.btn{
+  display:inline-block;
+  font-family:var(--sans);font-weight:700;
+  font-size:15.5px;letter-spacing:.08em;
+  padding:18px 46px;border-radius:999px;
+  text-decoration:none;
+  background:var(--signal);color:var(--void);
+  box-shadow:0 0 0 1px rgba(63,224,143,.4),0 8px 40px rgba(63,224,143,.22);
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(63,224,143,.7),0 14px 52px rgba(63,224,143,.4)}
+.btn:focus-visible{outline:2px solid var(--white);outline-offset:3px}
+.btn-dawn{background:var(--ink);color:var(--dawn);box-shadow:0 8px 32px rgba(35,31,24,.35)}
+.btn-dawn:hover{box-shadow:0 14px 44px rgba(35,31,24,.5)}
+
+/* ---------- 統計カウンター ---------- */
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--hair);
+  border-bottom:1px solid var(--hair);
+  margin:52px 0;
+}
+.stat{padding:38px 14px;text-align:center;border-left:1px solid var(--hair)}
+.stat:first-child{border-left:none}
+.stat .num{
+  font-family:var(--mono);font-weight:600;
+  font-size:clamp(36px,6.4vw,60px);
+  line-height:1.1;display:block;color:var(--white);
+}
+.stat .num small{font-size:.4em;margin-left:2px}
+.stat.hot .num{color:var(--signal);text-shadow:0 0 30px rgba(63,224,143,.45)}
+.stat .lbl{display:block;margin-top:12px;font-size:12px;color:var(--faint);line-height:1.8;letter-spacing:.04em}
+
+/* ---------- 忘却チャット ---------- */
+.chat{
+  max-width:520px;margin:44px auto;
+  border:1px solid var(--hair);
+  border-radius:16px;
+  background:rgba(14,26,20,.62);
+  backdrop-filter:blur(6px);
+  padding:26px 24px 20px;
+  min-height:320px;
+  position:relative;overflow:hidden;
+}
+.chat-head{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  color:var(--faint);margin-bottom:18px;
+  display:flex;justify-content:space-between;
+}
+.bub{
+  max-width:86%;
+  padding:12px 18px;border-radius:14px;
+  font-size:13.5px;line-height:1.8;
+  margin-bottom:12px;
+  opacity:0;
+}
+.bub.user{
+  margin-left:auto;
+  background:var(--moss);color:var(--white);
+  border-bottom-right-radius:4px;
+}
+.bub.ai{
+  background:rgba(242,250,245,.08);color:#C4D4CA;
+  border-bottom-left-radius:4px;
+}
+.chat-day{
+  text-align:center;font-family:var(--mono);
+  font-size:10px;letter-spacing:.3em;color:var(--faint);
+  margin:16px 0;opacity:0;
+}
+/* 12秒ループ：出現→溶けて消える→翌日→同じ説明をもう一度 */
+@keyframes bubIn{0%{opacity:0;transform:translateY(10px)}8%{opacity:1;transform:none}70%{opacity:1;filter:blur(0)}82%{opacity:0;filter:blur(8px)}100%{opacity:0}}
+@keyframes dayIn{0%,55%{opacity:0}63%,80%{opacity:1}90%,100%{opacity:0}}
+@keyframes bub2In{0%,68%{opacity:0;transform:translateY(10px)}78%{opacity:1;transform:none}94%{opacity:1}100%{opacity:0}}
+.chat.play .b1{animation:bubIn 13s ease infinite}
+.chat.play .b2{animation:bubIn 13s ease .9s infinite}
+.chat.play .chat-day{animation:dayIn 13s ease infinite}
+.chat.play .b3{animation:bub2In 13s ease infinite}
+.chat-caption{
+  text-align:center;font-size:12.5px;color:var(--faint);
+  margin-top:-8px;
+}
+
+/* ---------- 朝の通知 ---------- */
+.notif{
+  max-width:460px;margin:44px auto;
+  background:var(--dawn);color:var(--ink);
+  border-radius:18px;
+  padding:22px 26px;
+  box-shadow:0 24px 70px rgba(0,0,0,.5),0 0 0 1px rgba(217,169,78,.25);
+  transform:rotate(-.6deg);
+}
+.notif .app{
+  display:flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  color:var(--ink-soft);margin-bottom:10px;
+}
+.notif .dot{width:9px;height:9px;border-radius:3px;background:var(--gold)}
+.notif .msg{font-size:14.5px;line-height:1.9;font-weight:500}
+.mlist{max-width:560px;margin:34px auto 0;display:grid;gap:11px}
+.m-item{
+  border:1px solid var(--hair);border-radius:12px;
+  background:rgba(14,26,20,.55);
+  padding:16px 20px;font-size:13.5px;color:#C4D4CA;
+  display:flex;gap:14px;align-items:baseline;
+}
+.m-item .t{
+  font-family:var(--serif);font-weight:700;color:var(--signal);
+  font-size:12.5px;white-space:nowrap;letter-spacing:.06em;
+}
+
+/* ---------- スクショ ---------- */
+.shot{max-width:680px;margin:48px auto 0}
+.shot img{
+  width:100%;display:block;border-radius:14px;
+  border:1px solid var(--hair);
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+}
+.shot figcaption{
+  font-family:var(--mono);font-size:11px;color:var(--faint);
+  text-align:center;margin-top:14px;letter-spacing:.08em;
+}
+.shot-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:880px;margin:44px auto 0}
+.shot-grid figure{margin:0}
+.shot-grid img{width:100%;display:block;border-radius:12px;border:1px solid var(--hair)}
+.shot-grid figcaption{font-family:var(--mono);font-size:11px;color:var(--faint);text-align:center;margin-top:12px;letter-spacing:.06em}
+
+/* ---------- メタ種明かし ---------- */
+.meta-reveal{
+  border:1px solid rgba(63,224,143,.35);
+  border-radius:18px;
+  background:rgba(63,224,143,.05);
+  padding:40px 36px;
+  text-align:center;
+  margin:52px 0;
+  box-shadow:inset 0 0 60px rgba(63,224,143,.05);
+}
+.meta-reveal .big{
+  font-family:var(--mono);font-weight:600;
+  font-size:clamp(44px,8vw,84px);
+  color:var(--signal);
+  line-height:1.15;
+  text-shadow:0 0 40px rgba(63,224,143,.5);
+  display:block;margin:10px 0 4px;
+}
+.meta-reveal .unit{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.2em}
+.meta-reveal p{margin:18px 0 0;font-size:14px}
+
+/* ---------- 4つの道具 ---------- */
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:44px 0}
+.tool{
+  border:1px solid var(--hair);border-radius:14px;
+  background:rgba(14,26,20,.5);
+  padding:26px 26px 20px;
+}
+.tool h3{
+  font-family:var(--sans);font-weight:700;font-size:16.5px;color:var(--white);
+  margin-bottom:4px;
+}
+.tool .role{
+  font-family:var(--mono);font-size:10.5px;color:var(--signal);
+  letter-spacing:.14em;display:block;margin-bottom:12px;
+}
+.tool p{font-size:13px;margin:0;color:#AFC4B7;line-height:1.9}
+.flow{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin:44px 0 0;flex-wrap:wrap;
+  font-size:13.5px;
+}
+.flow .box{
+  border:1px solid var(--signal-dim);border-radius:10px;
+  padding:13px 22px;text-align:center;
+  background:rgba(14,26,20,.6);
+}
+.flow .box b{display:block;color:var(--white);font-size:14px}
+.flow .box span{font-size:11.5px;color:var(--faint)}
+.flow .arr{font-family:var(--mono);color:var(--signal);font-size:18px}
+
+/* ---------- 3ステップ ---------- */
+.steps{display:grid;gap:13px;margin:44px 0}
+.step{
+  border:1px solid var(--hair);border-radius:14px;
+  background:rgba(14,26,20,.5);
+  padding:28px 30px;
+}
+.step .tag{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;
+  color:var(--signal);display:block;margin-bottom:10px;
+}
+.step h3{font-family:var(--serif);font-weight:700;font-size:17.5px;color:var(--white);margin-bottom:8px;letter-spacing:.03em}
+.step p{font-size:13.5px;margin:0;color:#AFC4B7}
+
+/* ---------- 声 ---------- */
+.quotes{display:grid;gap:13px;margin:44px 0}
+.quote{
+  border-left:2px solid var(--signal-dim);
+  padding:8px 0 8px 22px;
+}
+.quote blockquote{
+  font-family:var(--serif);font-weight:700;font-size:16.5px;
+  color:var(--white);line-height:1.9;letter-spacing:.03em;
+}
+.quote .who{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;
+  color:var(--faint);margin-top:8px;display:block;
+}
+
+/* ---------- 夜明けの帯 ---------- */
+.dawnband{
+  position:relative;z-index:2;
+  height:46vh;
+  background:linear-gradient(180deg,
+    transparent 0%,
+    rgba(217,169,78,.06) 35%,
+    rgba(217,169,78,.18) 62%,
+    var(--dawn) 100%);
+  pointer-events:none;
+}
+
+/* ---------- 朝のセクション（最終CTA） ---------- */
+.dawn{
+  position:relative;z-index:2;
+  background:var(--dawn);color:var(--ink);
+  padding:110px 24px 90px;
+}
+.dawn-inner{max-width:760px;margin:0 auto}
+.dawn .mono-eyebrow{color:#A5822F}
+.dawn h2{color:var(--ink)}
+.dawn p{color:var(--ink-soft)}
+.dawn strong{color:var(--ink)}
+.dawn .pull{color:var(--ink)}
+.dawn .note{color:#8A8171}
+.offer-line{
+  display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
+  margin:36px 0 44px;
+}
+.offer-chip{
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+  border:1px solid rgba(35,31,24,.25);border-radius:999px;
+  padding:8px 20px;color:var(--ink);
+  background:rgba(255,255,255,.5);
+}
+.profile-mini{
+  display:flex;gap:24px;align-items:center;
+  max-width:560px;margin:64px auto 0;
+  border-top:1px solid rgba(35,31,24,.15);
+  padding-top:44px;
+}
+.profile-mini img{
+  width:96px;height:96px;object-fit:cover;border-radius:50%;
+  box-shadow:0 10px 30px rgba(35,31,24,.25);
+}
+.profile-mini .nm{
+  font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:.1em;color:var(--ink);
+}
+.profile-mini .nm small{
+  display:block;font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:#A5822F;margin-top:4px;
+}
+.profile-mini p{font-size:12.5px;margin:8px 0 0;line-height:1.9}
+
+/* ---------- 追従CTA ---------- */
+.sticky-cta{
+  position:fixed;right:20px;bottom:20px;z-index:60;
+  opacity:0;pointer-events:none;transform:translateY(12px);
+  transition:opacity .4s ease,transform .4s ease;
+}
+.sticky-cta.show{opacity:1;pointer-events:auto;transform:none}
+.sticky-cta .btn{font-size:13.5px;padding:14px 30px}
+
+footer{
+  position:relative;z-index:2;
+  background:var(--dawn-2);color:#8A8171;
+  text-align:center;padding:30px 24px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none;transition:none}
+  .hero h1 .ch-s{opacity:1;transform:none;filter:none;transition:none}
+  .hero-sub,.hero-cta,.hero-scroll{opacity:1;transition:none}
+  .hero-scroll::after{animation:none}
+  .chat.play .b1,.chat.play .b2,.chat.play .b3,.chat.play .chat-day{animation:none;opacity:1}
+}
+
+/* ---------- レスポンシブ ---------- */
+@media (max-width:920px){
+  .hud{display:none}
+  .hud-mobile{display:block}
+  .ch-label{display:none}
+}
+@media (max-width:760px){
+  .ch{padding:14vh 20px}
+  .stats{grid-template-columns:1fr}
+  .stat{border-left:none;border-top:1px solid var(--hair)}
+  .stat:first-child{border-top:none}
+  .tools{grid-template-columns:1fr}
+  .shot-grid{grid-template-columns:1fr}
+  .flow{flex-direction:column}
+  .flow .arr{transform:rotate(90deg)}
+  .profile-mini{flex-direction:column;text-align:center}
+  .sticky-cta{left:16px;right:16px;text-align:center}
+  .sticky-cta .btn{display:block}
+}
+</style>
+</head>
+<body>
+
+<canvas id="mem" aria-hidden="true"></canvas>
+
+<!-- HUD -->
+<div class="hud" aria-hidden="true">
+  <span class="pct" id="hudPct">MEMORY 000%</span>
+  <div class="track"><div class="fill" id="hudFill"></div></div>
+  <span class="nodes">NODES <b id="hudNodes">0000</b></span>
+</div>
+<div class="hud-mobile" aria-hidden="true">
+  <div class="row"><span>MEMORY DESIGN</span><span>NODES <b id="hudNodesM">0000</b></span></div>
+  <div class="bar"><i id="hudFillM"></i></div>
+</div>
+
+<!-- ============ CH0 HERO ============ -->
+<header class="hero" id="hero">
+  <div class="hero-inner">
+    <span class="mono-eyebrow">MEMORY DESIGN — AI MEMORY ARCHITECTURE</span>
+    <h1 class="split">あなたのAIは、昨日のあなたを覚えていない。</h1>
+    <p class="hero-sub">記憶とアイデンティティを宿したAIは、道具ではなく右腕になる。MEMORY DESIGNは、その設計を請け負うサービスです。</p>
+    <div class="hero-cta">
+      <a class="btn" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+      <p class="note" style="margin-top:16px">初回1時間・無料・オンライン。売り込みはしません。</p>
+    </div>
+  </div>
+  <div class="hero-scroll">SCROLL — 記憶が育ちはじめます</div>
+</header>
+
+<!-- ============ CH1 現実 ============ -->
+<section class="ch">
+  <div class="ch-inner">
+    <span class="ch-label">第一章 — 現実</span>
+    <div class="rv">
+      <span class="mono-eyebrow">The Reality</span>
+      <h2>使っている。<br>でも、成果が出ない。</h2>
+      <p>2025年11月、世界最大の経営コンサル会社マッキンゼーが、世界105カ国・約2,000社を対象にした調査報告書を出しました。</p>
+    </div>
+    <div class="stats rv">
+      <div class="stat"><span class="num" data-to="88">0<small>%</small></span><span class="lbl">「AIを使っている」<br>と答えた企業</span></div>
+      <div class="stat hot"><span class="num" data-to="6">0<small>%</small></span><span class="lbl">利益（EBIT）に5%以上<br>貢献できている企業</span></div>
+      <div class="stat"><span class="num" data-to="82">0<small>%</small></span><span class="lbl">使っているのに<br>成果が出ていない企業</span></div>
+    </div>
+    <div class="rv">
+      <p>10社のうち9社がAIを使い、成果を出せているのはわずか6%。何が差を分けたのか。技術力でも、最先端ツールでもありません。マッキンゼーはこう言っています。</p>
+      <p class="pull">「差は、<span class="accent">設計</span>と<span class="accent">覚悟</span>だ」</p>
+      <p>業務のやり方を根本から作り直した会社は、そうでない会社より<strong>3.6倍以上</strong>の確率でAIから大きな成果を得ていました。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CH2 正体 ============ -->
+<section class="ch">
+  <div class="ch-inner">
+    <span class="ch-label">第二章 — 正体</span>
+    <div class="rv">
+      <span class="mono-eyebrow">Why It Stays a Tool</span>
+      <h2>毎回、初対面。</h2>
+      <p>今、どんなふうにAIを使っているか、振り返ってみてください。</p>
+    </div>
+    <div class="chat rv" id="chat">
+      <div class="chat-head"><span>AI CHAT</span><span>MEMORY: OFF</span></div>
+      <div class="bub user b1">うちは飲食業で、スタッフが12人いて、今の課題は人手不足で……</div>
+      <div class="bub ai b2">ご状況ありがとうございます。一般的には、採用チャネルの見直しと定着施策が有効です。</div>
+      <div class="chat-day">— 翌日 —</div>
+      <div class="bub user b3">うちは飲食業で、スタッフが12人いて……（また最初から）</div>
+    </div>
+    <p class="chat-caption rv">昨日話したことを、今日のAIは知りません。</p>
+    <div class="rv">
+      <p style="margin-top:36px">どれだけ優秀なコンサルタントでも、あなたの業界の歴史、会社の文化、過去の失敗と成功を知らない人は「教科書通りの答え」しか出せません。だから「便利なんだけど、なんか薄っぺらい」という感覚になる。</p>
+      <p class="pull">AIに<span class="accent">記憶</span>を持たせていないから、<br>答えに厚みが出ない。</p>
+      <p style="text-align:center">それだけです。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CH3 朝 ============ -->
+<section class="ch">
+  <div class="ch-inner">
+    <span class="ch-label">第三章 — 朝六時</span>
+    <div class="rv">
+      <span class="mono-eyebrow">6:00 AM</span>
+      <h2>朝6時に、<br>全部終わっている。</h2>
+      <p>記憶を持ったAIのいる朝は、スマホの通知音で始まります。</p>
+    </div>
+    <div class="notif rv">
+      <div class="app"><span class="dot"></span>今朝のブリーフ</div>
+      <div class="msg">今日の優先事項3件、昨日の積み残し2件、10時の打ち合わせ用の事前メモ、準備完了。</div>
+    </div>
+    <div class="mlist rv">
+      <div class="m-item"><span class="t">打ち合わせ</span><span>前回の要点3行・今日のゴール・確認すべき1点が揃った事前メモ。「前回どこまで話しましたっけ」に、即答できる。</span></div>
+      <div class="m-item"><span class="t">調べもの</span><span>前日の夜、フォルダに1行書いて置くだけ。翌朝、論点整理まで済んだレポートが届いている。</span></div>
+      <div class="m-item"><span class="t">発信・文章</span><span>あなたの過去の文章を全部読んでいるAIが、あなたの文体で下書きを作る。直すのは15分で済む。</span></div>
+    </div>
+    <figure class="shot rv">
+      <img src="assets/morning-brief.png" alt="朝6時にObsidianへ届いているブリーフの実画面" loading="lazy">
+      <figcaption>ACTUAL SCREEN — 朝、こういうノートが置かれています</figcaption>
+    </figure>
+    <div class="rv" style="margin-top:40px">
+      <p class="pull">「今日何をすべきか」を<br>考えることが、なくなります。</p>
+      <p style="text-align:center">AIがすでに整理して置いてくれているから。<strong>あなたは判断するだけでいい。</strong></p>
+    </div>
+    <div class="rv" style="text-align:center;margin-top:48px">
+      <a class="btn" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CH4 複利（メタ種明かし） ============ -->
+<section class="ch">
+  <div class="ch-inner">
+    <span class="ch-label">第四章 — 複利</span>
+    <div class="rv">
+      <span class="mono-eyebrow">Compound Memory</span>
+      <h2>いま、画面の奥で<br>育っていたもの。</h2>
+      <p>気づいていましたか。このページを開いてから、背景で小さな光の点が増え続けていたことに。</p>
+    </div>
+    <div class="meta-reveal rv">
+      <span class="unit">ここまでのスクロールで繋がった記憶ノード</span>
+      <span class="big" id="liveCount">0</span>
+      <span class="unit">NODES — AND GROWING</span>
+      <p>あなたがこの数分で育てたのが、これ。<br><strong>1年働けば、これが数千になります。</strong>これが「記憶の複利」です。</p>
+    </div>
+    <div class="rv">
+      <p>積み上がった記憶の上に、次の記憶が積み上がる。1ヶ月目のAIの答えには一般論が混じります。3ヶ月で会社の事情を踏まえはじめ、6ヶ月で判断の記録・顧客情報・業界知識が積層し、1年後には——<strong>会社を誰よりも知るAI</strong>になっている。</p>
+    </div>
+    <div class="rv" style="margin-top:52px">
+      <p class="pull">これはイメージではありません。<br>実際に運用している記憶の<span class="accent">実物</span>です。</p>
+    </div>
+    <div class="shot-grid rv">
+      <figure><img src="assets/graph-real-galaxy.png" alt="実際のObsidianグラフビュー（俯瞰）" loading="lazy"><figcaption>俯瞰 — 数千のメモが星団のように繋がる</figcaption></figure>
+      <figure><img src="assets/graph-real-close.png" alt="実際のObsidianグラフビュー（拡大）" loading="lazy"><figcaption>拡大 — 記録・判断・知識が互いにリンクする</figcaption></figure>
+    </div>
+    <div class="rv" style="margin-top:44px">
+      <p>今日始めた人が1年後に積み上げている記憶を、来年始めた人は持っていません。<strong>この差は、努力では埋まりません。始めた時期が全てです。</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CH5 仕組み ============ -->
+<section class="ch">
+  <div class="ch-inner">
+    <span class="ch-label">第五章 — 仕組み</span>
+    <div class="rv">
+      <span class="mono-eyebrow">How It Works</span>
+      <h2>仕組みの土台はすべて<br>設計士が作ります。</h2>
+      <p>4つのツールを組み合わせて、AIに記憶とアイデンティティを組み込みます。あなたが黒い画面と格闘する必要はありません。</p>
+    </div>
+    <div class="tools rv">
+      <div class="tool"><h3>Claude Code</h3><span class="role">FILE-NATIVE AI</span><p>あなたのPCの中のファイルを直接読み、動かし、書き戻せるAI。ChatGPTはブラウザの中、Claude Codeはあなたの手元に住んでいます。</p></div>
+      <div class="tool"><h3>Obsidian</h3><span class="role">LOCAL MEMORY</span><p>全ノートが手元にテキストファイルとして残る無料ノートアプリ。クラウドではなく手元にあるから、AIが直接読めます。</p></div>
+      <div class="tool"><h3>VS Code</h3><span class="role">SINGLE COCKPIT</span><p>指示・確認・編集が1画面で完結する司令室。毎日開くのはこれ1つだけです。</p></div>
+      <div class="tool"><h3>GitHub</h3><span class="role">MEMORY VAULT</span><p>変更履歴をすべて記録する金庫。PCの故障や買い替えがあっても、育てた記憶は失われません。</p></div>
+    </div>
+    <div class="flow rv">
+      <div class="box"><b>投入口</b><span>1行書いて放り込む</span></div>
+      <span class="arr">→</span>
+      <div class="box"><b>夜のAI</b><span>寝ている間に処理</span></div>
+      <span class="arr">→</span>
+      <div class="box"><b>出力口</b><span>翌朝、結果が届く</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CH6 提供内容 ============ -->
+<section class="ch">
+  <div class="ch-inner">
+    <span class="ch-label">第六章 — 設計</span>
+    <div class="rv">
+      <span class="mono-eyebrow">What I Do</span>
+      <h2>道具を、右腕に変える<br>3つの仕事。</h2>
+    </div>
+    <div class="steps rv">
+      <div class="step"><span class="tag">STEP 1 — 構造化</span><h3>あなたの文脈を、AIが読める形にする</h3><p>仕事の内容、判断基準、業界知識。「言語化されていなかった判断軸」が初めて形になり、属人化していた知識が資産になります。</p></div>
+      <div class="step"><span class="tag">STEP 2 — 構築</span><h3>記憶が積み上がる仕組みを作る</h3><p>技術的な部分は全部やります。フォルダ構造、指示書、自動化、通知。「今日からこのフォルダに書けば動きます」という状態で引き渡します。</p></div>
+      <div class="step"><span class="tag">STEP 3 — 伴走</span><h3>自律的に動き始めるまで、3ヶ月見る</h3><p>作って終わりにしません。「思ったのと違う」という場面で一緒に調整できるのが、伴走の意味です。</p></div>
+    </div>
+    <div class="quotes rv">
+      <div class="quote"><blockquote>「店に入る前から、今日のゲームプランが全部見えている」</blockquote><span class="who">飲食業・経営者</span></div>
+      <div class="quote"><blockquote>「顧問先から呼ばれる前に、こちらから声をかけられるようになった」</blockquote><span class="who">税理士事務所・所長</span></div>
+      <div class="quote"><blockquote>「打ち合わせに入る前に、仮説が3本立っている」</blockquote><span class="who">経営コンサルタント</span></div>
+    </div>
+    <div class="rv">
+      <p class="pull">3ヶ月後、あなたのAIは自走し始める。<br>そうなったら、私は必要なくなります。<br><span class="accent">それでいいんです。</span></p>
+      <p class="note" style="text-align:center">これはサブスクではありません。依存させない設計です。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 夜明け ============ -->
+<div class="dawnband" aria-hidden="true"></div>
+
+<!-- ============ CH7 朝（最終CTA） ============ -->
+<section class="dawn" id="contact">
+  <div class="dawn-inner">
+    <div class="rv" style="text-align:center">
+      <span class="mono-eyebrow">First Step</span>
+      <h2>夜が明けました。<br>ここからは、あなたの番です。</h2>
+      <p style="max-width:520px;margin:0 auto 8px">経営の文脈を全部知っていて、24時間動いて、朝までに資料を仕上げてくる右腕。人間で雇えば月々数十万円。MEMORY DESIGNなら、<strong>買い切りの設計費と3ヶ月の伴走だけ</strong>。月々の固定費が続くサブスク型ではありません。</p>
+    </div>
+    <div class="offer-line rv">
+      <span class="offer-chip">初回1時間・無料</span>
+      <span class="offer-chip">オンライン</span>
+      <span class="offer-chip">売り込みなし</span>
+      <span class="offer-chip">同時にお受けするのは5社まで</span>
+    </div>
+    <div class="rv" style="text-align:center">
+      <a class="btn btn-dawn" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+      <p class="note" style="margin-top:18px">① フォーム送信 → ② 1時間の無料オンライン面談 → ③ 必要な設計範囲とお見積りのご提案。<br>提案を聞いて「合わない」と思ったら、そこで終わって構いません。</p>
+    </div>
+    <div class="profile-mini rv">
+      <img src="assets/mitsui.jpg" alt="三井隆義">
+      <div>
+        <div class="nm">三井 隆義<small>TAKAYOSHI MITSUI — MEMORY ARCHITECT</small></div>
+        <p>飲食業界28年（経営者14年）→ 会計事務所3年 → AI経営コンサルタント。経営者としての現場感と、数字の読み方。この両方を持っているAIコンサルタントは、日本にそう多くないと思っています。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sticky-cta" id="stickyCta">
+  <a class="btn" href="https://form.run/@taka3210" target="_blank" rel="noopener">無料面談を申し込む</a>
+</div>
+
+<footer>
+  MEMORY DESIGN — あなたのAIに、記憶とアイデンティティを。 &copy; 2026 Takayoshi Mitsui
+</footer>
+
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = matchMedia('(max-width:760px)').matches;
+
+  /* ========== 記憶キャンバス：スクロールで決定論的に育つ ========== */
+  const cv = document.getElementById('mem');
+  const ctx = cv.getContext('2d');
+  let W,H,dpr;
+  function resize(){
+    dpr = Math.min(devicePixelRatio||1,2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize(); addEventListener('resize', ()=>{resize(); layout();});
+
+  function seeded(s){return function(){s=(s*9301+49297)%233280;return s/233280}}
+  const N = isMobile ? 190 : 430;
+  let nodes=[], links=[];
+  function layout(){
+    nodes=[]; links=[];
+    const r = seeded(777);
+    for(let i=0;i<N;i++){
+      let x,y;
+      if(nodes.length && r()>.16){
+        const p = nodes[Math.floor(r()*nodes.length)];
+        const a = r()*Math.PI*2, d = 34+r()*115;
+        x = p.x+Math.cos(a)*d; y = p.y+Math.sin(a)*d;
+      }else{
+        x = W*(.06+r()*.88); y = H*(.06+r()*.88);
+      }
+      x = Math.max(8,Math.min(W-8,x)); y = Math.max(8,Math.min(H-8,y));
+      const n = {x,y,r:r()<.07?2.4+r()*1.6:.9+r()*1.3,birth:(i/N)*.92,ph:r()*Math.PI*2,sp:.3+r()*.7};
+      const cands = nodes.map((m,j)=>({j,d:(m.x-x)**2+(m.y-y)**2})).sort((a,b)=>a.d-b.d).slice(0,2);
+      cands.forEach(c=>{if(c.d<170*170) links.push([nodes.length,c.j])});
+      nodes.push(n);
+    }
+  }
+  layout();
+
+  /* スクロール進捗（スムージング付き） */
+  let rawP=0, p=0;
+  function calcP(){
+    const max = document.documentElement.scrollHeight - innerHeight;
+    rawP = max>0 ? Math.min(1, scrollY/max) : 0;
+  }
+  calcP(); addEventListener('scroll', calcP, {passive:true});
+
+  const hudFill = document.getElementById('hudFill');
+  const hudPct = document.getElementById('hudPct');
+  const hudNodes = document.getElementById('hudNodes');
+  const hudFillM = document.getElementById('hudFillM');
+  const hudNodesM = document.getElementById('hudNodesM');
+  const liveCount = document.getElementById('liveCount');
+  const nightA=[7,12,10], nightB=[13,22,17];
+
+  let lastT=0;
+  function frame(t){
+    p += (rawP-p)*(reduced?1:.06);
+    const prog = reduced ? 1 : p;
+
+    /* 背景微変化 */
+    const bg = nightA.map((c,i)=>Math.round(c+(nightB[i]-c)*prog));
+    ctx.fillStyle = 'rgb('+bg.join(',')+')';
+    ctx.fillRect(0,0,W,H);
+
+    let visible = 0;
+    /* リンク */
+    ctx.lineWidth=.6;
+    for(const [a,b] of links){
+      const na=nodes[a], nb=nodes[b];
+      if(na.birth>prog || nb.birth>prog) continue;
+      ctx.strokeStyle='rgba(157,184,170,.10)';
+      ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);ctx.stroke();
+    }
+    /* ノード */
+    for(const n of nodes){
+      if(n.birth>prog) continue;
+      visible++;
+      const wob = reduced?0:Math.sin(t*.0004*n.sp+n.ph)*1.6;
+      const x=n.x+wob, y=n.y+wob*.6;
+      const age = prog-n.birth;           /* 生まれたては光る */
+      const g = Math.max(0, 1-age*14);
+      const r = n.r*(1+g*1.1);
+      if(g>.03){
+        const grad=ctx.createRadialGradient(x,y,0,x,y,r*6);
+        grad.addColorStop(0,'rgba(63,224,143,'+(.55*g)+')');
+        grad.addColorStop(1,'rgba(63,224,143,0)');
+        ctx.fillStyle=grad;
+        ctx.beginPath();ctx.arc(x,y,r*6,0,7);ctx.fill();
+      }
+      ctx.fillStyle = g>.05 ? 'rgba(63,224,143,.95)' : 'rgba(196,212,202,.68)';
+      ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+    }
+
+    /* HUD更新 */
+    const pctTxt = String(Math.round(prog*100)).padStart(3,'0');
+    const ndTxt = String(visible).padStart(4,'0');
+    if(hudPct) hudPct.textContent = 'MEMORY '+pctTxt+'%';
+    if(hudFill) hudFill.style.height = (prog*100)+'%';
+    if(hudNodes) hudNodes.textContent = ndTxt;
+    if(hudFillM) hudFillM.style.width = (prog*100)+'%';
+    if(hudNodesM) hudNodesM.textContent = ndTxt;
+    if(liveCount) liveCount.textContent = visible;
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* ========== ヒーロー文字分解リビール ========== */
+  const heroEl = document.getElementById('hero');
+  document.querySelectorAll('.split').forEach(el=>{
+    const txt = el.textContent;
+    el.textContent='';
+    [...txt].forEach((c,i)=>{
+      const s=document.createElement('span');
+      s.className='ch-s';
+      s.style.transitionDelay = (i*38)+'ms';
+      s.textContent=c;
+      el.appendChild(s);
+    });
+  });
+  requestAnimationFrame(()=>requestAnimationFrame(()=>heroEl.classList.add('on')));
+
+  /* ========== スクロールリビール ========== */
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}});
+  },{threshold:.14});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+  /* ========== 統計カウントアップ ========== */
+  const io2 = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const numEl = e.target;
+      const to = +numEl.dataset.to;
+      io2.unobserve(numEl);
+      if(reduced){ numEl.firstChild.textContent = to; return; }
+      const t0 = performance.now(), dur=1600;
+      (function tick(t){
+        const k = Math.min(1,(t-t0)/dur);
+        const ease = 1-Math.pow(1-k,3);
+        numEl.firstChild.textContent = Math.round(to*ease);
+        if(k<1) requestAnimationFrame(tick);
+      })(t0);
+    });
+  },{threshold:.6});
+  document.querySelectorAll('.stat .num').forEach(el=>io2.observe(el));
+
+  /* ========== 忘却チャットの再生 ========== */
+  const chat = document.getElementById('chat');
+  if(chat){
+    const io3 = new IntersectionObserver(es=>{
+      es.forEach(e=>{if(e.isIntersecting){chat.classList.add('play');io3.unobserve(chat)}});
+    },{threshold:.4});
+    io3.observe(chat);
+  }
+
+  /* ========== 夜明けモード＋追従CTA ========== */
+  const sc = document.getElementById('stickyCta');
+  const dawnSec = document.getElementById('contact');
+  let dawnVisible=false;
+  function updateSticky(){
+    const past = scrollY > innerHeight*.8;
+    if(sc) sc.classList.toggle('show', past && !dawnVisible);
+  }
+  if(dawnSec){
+    const io4 = new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        dawnVisible = e.isIntersecting;
+        document.body.classList.toggle('dawn-mode', e.isIntersecting);
+        updateSticky();
+      });
+    },{threshold:.12});
+    io4.observe(dawnSec);
+  }
+  addEventListener('scroll', updateSticky, {passive:true});
+})();
+</script>
+</body>
+</html>
