@@ -543,6 +543,22 @@ footer{
   text-align:center;padding:34px 24px;font-size:12px;letter-spacing:.08em;
 }
 
+/* ---------- 追従CTA ---------- */
+.sticky-cta{
+  position:fixed;right:20px;bottom:20px;z-index:60;
+  opacity:0;pointer-events:none;transform:translateY(12px);
+  transition:opacity .4s ease,transform .4s ease;
+}
+.sticky-cta.show{opacity:1;pointer-events:auto;transform:none}
+.sticky-cta .btn{
+  font-size:14px;padding:14px 30px;
+  box-shadow:0 10px 36px rgba(12,18,16,.45);
+}
+@media (max-width:760px){
+  .sticky-cta{left:16px;right:16px;text-align:center}
+  .sticky-cta .btn{display:block}
+}
+
 /* ---------- レスポンシブ ---------- */
 @media (max-width:760px){
   section{padding:72px 0}
@@ -569,7 +585,8 @@ footer{
     <p class="hero-hook">体感9割の人が、AIを使いこなせていない。</p>
     <h1>貴方のAIを、<br>世界一の右腕にする。</h1>
     <p class="hero-sub">AIに連続した記憶とアイデンティティを宿らせ、経営者の文脈と判断の癖を覚えさせることにより、最高の相棒にするサービスです。</p>
-    <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む</a>
+    <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+    <p class="note" style="margin-top:16px;color:var(--mist)">初回1時間・無料・オンライン。売り込みはしません。</p>
   </div>
   <div class="hero-scrollcue">SCROLL</div>
 </header>
@@ -626,6 +643,31 @@ footer{
   </div>
 </section>
 
+<!-- ============ こんな方へ（紙・明） ============ -->
+<section class="sec-paper alt">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">Who It's For</span>
+      <h2>こんな方のための<br>サービスです。</h2>
+    </div>
+    <div class="pillars rv">
+      <div class="pillar">
+        <h3>中小企業の経営者</h3>
+        <p>判断することが多すぎて、考える時間が取れない。会議、数字、人の悩みが頭の中で混ざったまま1日が終わる。——会社の文脈を全部覚えたAIが、判断の材料を先回りで揃えます。</p>
+      </div>
+      <div class="pillar">
+        <h3>医師・士業など、多忙な専門職の方</h3>
+        <p>本業の専門性は高いのに、書類、情報整理、発信といった「専門外の仕事」に夜の時間を奪われている。——あなたの流儀を覚えたAIが、専門外の仕事を巻き取ります。</p>
+      </div>
+      <div class="pillar">
+        <h3>個人事業主・フリーランス</h3>
+        <p>営業も経理も発信も、全部自分でやるしかない。——人を雇う前に、まず「記憶を持ったAI」という一人目の右腕を持つ、という選択肢があります。</p>
+      </div>
+    </div>
+    <p class="note rv" style="text-align:center">法人・個人は問いません。「自分の仕事の文脈を覚えた、自分だけのAI」を持ちたい方へ。</p>
+  </div>
+</section>
+
 <!-- ============ 問題の正体（朝／紙） ============ -->
 <section class="sec-paper">
   <div class="wrap">
@@ -633,7 +675,7 @@ footer{
       <span class="eyebrow">Why It Stays a Tool</span>
       <h2>なぜあなたのAIは<br>「道具止まり」なのか</h2>
       <p class="lead">今、どんなふうにAIを使っているか、振り返ってみてください。</p>
-      <p>「うちは飲食業で、スタッフが〇人いて、今の課題は人手不足で……」<br>「会社を経営していて、売上は横ばいで、来期どう動くか悩んでいて……」</p>
+      <p>「うちは飲食業で、スタッフが〇人いて、今の課題は人手不足で……」<br>「会社を経営していて、売上は横ばいで、来期どう動くか悩んでいて……」<br>「クリニックをやっていて、日中は診療、夜は書類とスタッフの悩みで……」</p>
       <p><strong>この説明、先週も同じことを打ち込んでいませんでしたか？</strong></p>
       <p>今日聞いたことを、明日また同じ文脈で聞いたら、相手は覚えていません。昨日話した内容を、今日のAIは知りません。<span class="accent">毎回、初対面です。</span></p>
       <p>これが【記憶のないAI】です。どれだけ優秀なコンサルタントでも、あなたの業界の歴史、会社の文化、過去の失敗と成功を知らない人は「教科書通りの答え」しか出せません。だから「便利なんだけど、なんか薄っぺらい」という感覚になるんです。</p>
@@ -669,6 +711,10 @@ footer{
       <p class="lead">これは全部、AIが<strong>【記憶を持っているから】</strong>できる話です。あなたの会社のこと、判断軸、文体、今週のフォーカス。全部AIが知っていて、夜のうちに処理して、朝に結果を置いておく。</p>
       <p class="pull">「今日何をすべきか」を<br>考えることが、なくなります。</p>
       <p class="lead" style="text-align:center">AIがすでに整理して置いてくれているから。<br><strong>あなたは判断するだけでいい。</strong></p>
+    </div>
+    <div class="rv" style="text-align:center;margin-top:56px">
+      <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+      <p class="note" style="margin-top:14px">初回1時間・オンライン。売り込みはしません。</p>
     </div>
   </div>
 </section>
@@ -906,6 +952,10 @@ footer{
       <p class="price-usual">経営の文脈を全部知っていて、24時間動いて、朝までに資料を仕上げてくる右腕。<br>人間で雇えば<b class="price-strike">月々数十万円</b>はするでしょう。<br>大手ファームの経営コンサル顧問契約なら、月数百万は下りません。</p>
       <p class="price-md">それが MEMORY DESIGN なら——<br><span class="accent">買い切りの設計費と、3ヶ月の伴走だけ。</span></p>
       <p class="note" style="margin-top:26px;color:#B8CDC2">詳しい料金は、初回面談であなたに必要な設計範囲を伺ったうえでご案内します。<br>月々の固定費が続くサブスク型ではありません。</p>
+      <p class="note" style="margin-top:22px;color:#B8CDC2">申し込み後の流れ：① フォーム送信 → ② 1時間の無料オンライン面談 → ③ 必要な設計範囲とお見積りのご提案。<br>提案を聞いて「合わない」と思ったら、そこで終わって構いません。</p>
+      <div style="text-align:center;margin-top:36px">
+        <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+      </div>
     </div>
   </div>
 </section>
@@ -948,10 +998,15 @@ footer{
     <h2 class="rv">気づいたその日が、<br>最短・最速です。</h2>
     <p class="lead rv">初回は、話を聞くところから始めます。あなたの仕事の内容、今のAIの使い方、何に時間がかかっているか。それを聞いてから、何が必要かを一緒に考えます。</p>
     <div class="rv">
-      <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む</a>
+      <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+      <p class="note" style="margin-top:18px;color:var(--mist)">初回1時間・無料・オンライン。売り込みはしません。<br>伴走型サービスのため、同時にお受けできるのは<strong style="color:var(--glow)">5社まで</strong>です。空き状況は面談時にお伝えします。</p>
     </div>
   </div>
 </section>
+
+<div class="sticky-cta" id="stickyCta">
+  <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">無料面談を申し込む</a>
+</div>
 
 <footer>
   MEMORY DESIGN — あなたのAIに、記憶とアイデンティティを。<br>
@@ -1131,6 +1186,23 @@ footer{
     es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
   },{threshold:.12});
   document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+  /* ---------- 追従CTA（ヒーロー通過後に表示、最終CTA付近で隠す） ---------- */
+  const sc = document.getElementById('stickyCta');
+  const finalSec = document.getElementById('contact');
+  let finalVisible = false;
+  function updateSticky(){
+    if(!sc) return;
+    const past = scrollY > innerHeight * .8;
+    sc.classList.toggle('show', past && !finalVisible);
+  }
+  if(finalSec){
+    const io2 = new IntersectionObserver(es=>{
+      es.forEach(e=>{ finalVisible = e.isIntersecting; updateSticky(); });
+    },{threshold:.15});
+    io2.observe(finalSec);
+  }
+  addEventListener('scroll', updateSticky, {passive:true});
 })();
 </script>
 </body>
