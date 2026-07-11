@@ -593,13 +593,13 @@ footer{
 .bub.user{margin-left:auto;background:var(--deep);color:#fff;border-bottom-right-radius:4px}
 .bub.ai{background:#EFF3EE;color:var(--ink-soft);border-bottom-left-radius:4px}
 .chat-day{text-align:center;font-size:10px;letter-spacing:.3em;color:var(--mist);margin:14px 0;opacity:0;font-weight:700}
-@keyframes bubIn{0%{opacity:0;transform:translateY(10px)}8%{opacity:1;transform:none}66%{opacity:1;filter:blur(0)}78%{opacity:0;filter:blur(8px)}100%{opacity:0}}
-@keyframes dayIn{0%,52%{opacity:0}60%,80%{opacity:1}92%,100%{opacity:0}}
-@keyframes bub2In{0%,64%{opacity:0;transform:translateY(10px)}74%{opacity:1;transform:none}96%{opacity:1}100%{opacity:0}}
-.chat-demo.play .b1{animation:bubIn 13s ease infinite}
-.chat-demo.play .b2{animation:bubIn 13s ease .9s infinite}
-.chat-demo.play .chat-day{animation:dayIn 13s ease infinite}
-.chat-demo.play .b3{animation:bub2In 13s ease infinite}
+@keyframes bubIn{0%{opacity:0;transform:translateY(10px)}7%{opacity:1;transform:none}38%{opacity:1;filter:blur(0)}48%{opacity:0;filter:blur(8px)}100%{opacity:0}}
+@keyframes dayIn{0%,46%{opacity:0}54%,84%{opacity:1}94%,100%{opacity:0}}
+@keyframes bub2In{0%,58%{opacity:0;transform:translateY(10px)}66%{opacity:1;transform:none}96%{opacity:1}100%{opacity:0}}
+.chat-demo.play .b1{animation:bubIn 7.5s ease infinite}
+.chat-demo.play .b2{animation:bubIn 7.5s ease .6s infinite}
+.chat-demo.play .chat-day{animation:dayIn 7.5s ease infinite}
+.chat-demo.play .b3{animation:bub2In 7.5s ease infinite}
 .chat-cap{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-bottom:2em}
 @media (prefers-reduced-motion:reduce){
   .chat-demo.play .b1,.chat-demo.play .b2,.chat-demo.play .b3,.chat-demo.play .chat-day{animation:none;opacity:1}
