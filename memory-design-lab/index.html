@@ -33,7 +33,6 @@
   --sans:'Zen Kaku Gothic New', sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
 body{
   font-family:var(--sans);
   color:var(--ink);
@@ -678,7 +677,6 @@ footer{
       <p class="note" style="margin-top:16px;color:var(--mist)">初回1時間・無料・オンライン。売り込みはしません。</p>
     </div>
   </div>
-  <div class="hero-scrollcue">SCROLL — 記憶が育ちはじめます</div>
 </header>
 
 <!-- ============ 共感導入＋マッキンゼー（夜つづき） ============ -->
@@ -922,14 +920,6 @@ footer{
         <div class="g-d">会社を誰よりも知るAI。<br>もう追いつけない差に</div>
       </div>
     </div>
-    <div class="wrap rv" style="padding:0">
-      <div class="meta-reveal">
-        <span class="unit">このページを読みはじめてから、画面の隅の計器が数えていたもの</span>
-        <span class="big" id="liveCount">0</span>
-        <span class="unit">MEMORY NODES — AND GROWING</span>
-        <p>気づいていましたか。あなたがスクロールした分だけ、ヒーローの星空でも記憶が繋がっていました。<br><strong>この数分で育ったのが、これ。1年働けば、数千になります。</strong></p>
-      </div>
-    </div>
     <div class="proof rv">
       <p class="proof-title">これはイメージ図ではありません。<br>実際に運用している、AIの記憶の<span class="accent">実物</span>です。</p>
       <div class="proof-grid">
@@ -1121,6 +1111,8 @@ footer{
   &copy; 2026 Takayoshi Mitsui
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 <script>
 /* ============================================================
    署名要素：記憶のグラフ・アニメーション
@@ -1254,10 +1246,147 @@ footer{
     requestAnimationFrame(frame);
   }
 
+  /* ============================================================
+     ヒーロー：three.js 3D記憶星団
+     スクロールで育ち、マウスで視差回転する。
+     three.js が読めない環境では2D版にフォールバック。
+     ============================================================ */
+  function init3D(canvas){
+    const isMobile = matchMedia('(max-width:760px)').matches;
+    const N = isMobile ? 220 : 460;
+    const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio||1, 2));
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(55, 1, 1, 500);
+    cam.position.z = 95;
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const rnd = (s=>()=> (s=(s*9301+49297)%233280)/233280)(4242);
+
+    /* 星団のハブ＋周辺ノード */
+    const hubs = [];
+    for(let h=0;h<9;h++){
+      hubs.push(new THREE.Vector3((rnd()-.5)*110,(rnd()-.5)*70,(rnd()-.5)*70));
+    }
+    const pos = new Float32Array(N*3);
+    const pts = [];
+    for(let i=0;i<N;i++){
+      let p;
+      if(rnd() < .72){
+        const hb = hubs[Math.floor(rnd()*hubs.length)];
+        p = new THREE.Vector3(hb.x+(rnd()-.5)*36, hb.y+(rnd()-.5)*30, hb.z+(rnd()-.5)*30);
+      }else{
+        p = new THREE.Vector3((rnd()-.5)*150,(rnd()-.5)*95,(rnd()-.5)*95);
+      }
+      pts.push(p);
+      pos[i*3]=p.x; pos[i*3+1]=p.y; pos[i*3+2]=p.z;
+    }
+
+    /* 丸い点スプライト */
+    const sp = document.createElement('canvas'); sp.width=sp.height=64;
+    const sc2 = sp.getContext('2d');
+    const gr = sc2.createRadialGradient(32,32,0,32,32,32);
+    gr.addColorStop(0,'rgba(255,255,255,1)');
+    gr.addColorStop(.4,'rgba(255,255,255,.7)');
+    gr.addColorStop(1,'rgba(255,255,255,0)');
+    sc2.fillStyle=gr; sc2.fillRect(0,0,64,64);
+    const tex = new THREE.CanvasTexture(sp);
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    const points = new THREE.Points(geo, new THREE.PointsMaterial({
+      size:2.4, map:tex, color:0xC8D4CA, transparent:true, opacity:.85,
+      depthWrite:false, sizeAttenuation:true
+    }));
+    group.add(points);
+
+    /* 直近ノードの緑グロー（drawRangeの窓で最新だけ光る） */
+    const geoG = new THREE.BufferGeometry();
+    geoG.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    const glow = new THREE.Points(geoG, new THREE.PointsMaterial({
+      size:6, map:tex, color:0x5DC79A, transparent:true, opacity:.9,
+      depthWrite:false, blending:THREE.AdditiveBlending, sizeAttenuation:true
+    }));
+    group.add(glow);
+
+    /* 近傍リンク */
+    const lp = [], linkBirth = [];
+    for(let i=1;i<N;i++){
+      let best=-1, bd=1e9, second=-1, sd=1e9;
+      for(let j=0;j<i;j++){
+        const d = pts[i].distanceToSquared(pts[j]);
+        if(d<bd){ second=best; sd=bd; best=j; bd=d; }
+        else if(d<sd){ second=j; sd=d; }
+      }
+      if(best>=0 && bd<26*26){ lp.push(pts[i],pts[best]); linkBirth.push(i); }
+      if(second>=0 && sd<20*20 && rnd()<.5){ lp.push(pts[i],pts[second]); linkBirth.push(i); }
+    }
+    const geoL = new THREE.BufferGeometry().setFromPoints(lp);
+    const lines = new THREE.LineSegments(geoL, new THREE.LineBasicMaterial({
+      color:0x9DB8AA, transparent:true, opacity:.14
+    }));
+    group.add(lines);
+
+    function resize(){
+      const w = canvas.clientWidth || canvas.parentElement.clientWidth;
+      const h = canvas.clientHeight || canvas.parentElement.clientHeight;
+      renderer.setSize(w,h,false);
+      cam.aspect = w/h; cam.updateProjectionMatrix();
+    }
+    resize(); addEventListener('resize', resize);
+
+    /* マウス視差 */
+    let mx=0,my=0,tx=0,ty=0;
+    if(!isMobile){
+      addEventListener('pointermove', e=>{
+        tx = (e.clientX/innerWidth - .5) * .5;
+        ty = (e.clientY/innerHeight - .5) * .35;
+      },{passive:true});
+    }
+
+    /* 画面外では描画停止 */
+    let onScreen = true;
+    new IntersectionObserver(es=>{ es.forEach(e=>{ onScreen = e.isIntersecting; }); },{threshold:0}).observe(canvas);
+
+    const GROW_MIN = Math.floor(N*.16);
+    function loop(t){
+      requestAnimationFrame(loop);
+      if(!onScreen) return;
+      /* ヒーローは前半で見えるので、ページ前半で全成長するよう係数をかける */
+      const k = Math.min(1, prog*2.2);
+      const visible = reduced ? N : Math.min(N, Math.max(GROW_MIN, Math.floor(GROW_MIN + (N-GROW_MIN)*k)));
+      geo.setDrawRange(0, visible);
+      const win = Math.max(0, visible-14);
+      geoG.setDrawRange(win, visible-win);
+      let li=0; while(li<linkBirth.length && linkBirth[li]<visible) li++;
+      geoL.setDrawRange(0, li*2);
+      if(!reduced){
+        group.rotation.y += .0007;
+        mx += (tx-mx)*.04; my += (ty-my)*.04;
+        group.rotation.x = my;
+        group.rotation.z = mx*.15;
+        const s = 1+Math.sin(t*.0003)*.02;
+        group.scale.set(s,s,s);
+      }
+      renderer.render(scene,cam);
+    }
+    requestAnimationFrame(loop);
+  }
+
   const g1 = document.getElementById('graph');
-  if(g1) initGraph(g1, {max:150, interval:600});
+  if(g1){
+    if(window.THREE){ init3D(g1); }
+    else{ initGraph(g1, {max:150, interval:600}); }
+  }
   const g2 = document.getElementById('graph2');
   if(g2) initGraph(g2, {max:90, interval:900});
+
+  /* ---------- 慣性スクロール（Lenis） ---------- */
+  if(!reduced && window.Lenis){
+    const lenis = new Lenis({duration:1.1, smoothWheel:true});
+    (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
+  }
 
   /* ---------- 複利ミニグラフ（静的・シード付き） ---------- */
   function seeded(s){ return function(){ s=(s*9301+49297)%233280; return s/233280; }; }
