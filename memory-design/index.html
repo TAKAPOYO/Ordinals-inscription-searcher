@@ -1126,6 +1126,25 @@ footer{
 (function(){
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- 遠隔デバッグ：?diag=1 で環境と実行経路を画面に表示 ---------- */
+  const diag = /[?&]diag=1/.test(location.search) ? (function(){
+    const d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:10px;bottom:10px;z-index:99999;background:rgba(18,28,23,.94);color:#C8D4CA;font:11px/1.7 monospace;padding:10px 14px;border-radius:8px;max-width:86vw;white-space:pre-wrap;word-break:break-all;pointer-events:none;';
+    document.body.appendChild(d);
+    const lines = [];
+    const push = s => { lines.push(s); d.textContent = lines.join('\n'); };
+    addEventListener('error', e => push('ERROR: ' + (e.message || e.type) + (e.filename ? ' @' + e.filename.split('/').pop() + ':' + e.lineno : '')));
+    push(navigator.userAgent);
+    push('reduced-motion: ' + (reduced ? 'ON ← 全アニメ停止はこれが原因' : 'off'));
+    push('THREE: ' + (window.THREE ? 'ok' : 'NG（CDN読込失敗）'));
+    push('Lenis: ' + (window.Lenis ? 'ok' : 'NG（CDN読込失敗）'));
+    try{
+      const t = document.createElement('canvas');
+      push('WebGL: ' + ((t.getContext('webgl2') || t.getContext('webgl')) ? 'ok' : 'NG'));
+    }catch(e){ push('WebGL: ERR'); }
+    return push;
+  })() : null;
+
   /* ---------- スクロール進捗（全編で共有・HUD計器） ---------- */
   let progRaw = 0, prog = 0;
   function calcProg(){
@@ -1154,6 +1173,7 @@ footer{
 
   function initGraph(canvas, opts){
     const ctx = canvas.getContext('2d');
+    if(!ctx) return;
     let W, H, dpr;
     const isMobile = matchMedia('(max-width:760px)').matches;
     const MAX = isMobile ? Math.floor(opts.max*0.55) : opts.max;
@@ -1378,10 +1398,33 @@ footer{
     requestAnimationFrame(loop);
   }
 
+  /* 3Dが起動できない環境（WebGL不可・初期化例外）では、
+     後続の演出を道連れにせず2D版に確実に切り替える。
+     例外後のcanvasはWebGLコンテキストが残り2d取得不能になるため、
+     新しいcanvasに差し替えてからフォールバックする */
+  function heroFallback(cv, reason){
+    if(diag) diag('hero: 2Dフォールバック（' + reason + '）');
+    const fresh = cv.cloneNode(false);
+    cv.parentNode.replaceChild(fresh, cv);
+    initGraph(fresh, {max:150, interval:600});
+  }
   const g1 = document.getElementById('graph');
   if(g1){
-    if(window.THREE){ init3D(g1); }
-    else{ initGraph(g1, {max:150, interval:600}); }
+    let webgl = false;
+    try{
+      const t = document.createElement('canvas');
+      webgl = !!(t.getContext('webgl2') || t.getContext('webgl') || t.getContext('experimental-webgl'));
+    }catch(e){}
+    if(window.THREE && webgl){
+      try{
+        init3D(g1);
+        if(diag) diag('hero: 3D起動 ok');
+      }catch(e){
+        heroFallback(g1, '初期化例外: ' + e.message);
+      }
+    }else{
+      heroFallback(g1, window.THREE ? 'WebGL不可' : 'three.js未読込');
+    }
   }
   const g2 = document.getElementById('graph2');
   if(g2) initGraph(g2, {max:90, interval:900});
