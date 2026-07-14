@@ -84,7 +84,8 @@ p{margin-bottom:1.4em}
 .rv{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease}
 .rv.on{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){
-  .rv{opacity:1;transform:none;transition:none}
+  /* 完全停止ではなく、上下移動・ぼかしを消してフェードだけ残す軽量版 */
+  .rv{transform:none;transition:opacity .6s ease}
   html{scroll-behavior:auto}
 }
 
@@ -577,7 +578,8 @@ footer{
 .hero.on .hero-sub{opacity:1;transform:none;transition-delay:.95s}
 .hero.on .hero-cta-w{opacity:1;transform:none;transition-delay:1.2s}
 @media (prefers-reduced-motion:reduce){
-  .hero h1 .ch-s,.hero .hero-hook,.hero .hero-sub,.hero .hero-cta-w{opacity:1;transform:none;filter:none;transition:none}
+  /* 移動・ぼかしは消すが、フェードイン自体は残す（既存のtransition-delayが活きる） */
+  .hero h1 .ch-s,.hero .hero-hook,.hero .hero-sub,.hero .hero-cta-w{transform:none;filter:none}
 }
 
 /* ---------- 忘却チャットデモ ---------- */
@@ -1135,7 +1137,7 @@ footer{
     const push = s => { lines.push(s); d.textContent = lines.join('\n'); };
     addEventListener('error', e => push('ERROR: ' + (e.message || e.type) + (e.filename ? ' @' + e.filename.split('/').pop() + ':' + e.lineno : '')));
     push(navigator.userAgent);
-    push('reduced-motion: ' + (reduced ? 'ON ← 全アニメ停止はこれが原因' : 'off'));
+    push('reduced-motion: ' + (reduced ? 'ON（回転・視差のみ停止、フェード/成長は軽量版で継続）' : 'off'));
     push('THREE: ' + (window.THREE ? 'ok' : 'NG（CDN読込失敗）'));
     push('Lenis: ' + (window.Lenis ? 'ok' : 'NG（CDN読込失敗）'));
     try{
@@ -1379,7 +1381,9 @@ footer{
       if(!onScreen) return;
       /* ヒーローは前半で見えるので、ページ前半で全成長するよう係数をかける */
       const k = Math.min(1, prog*2.2);
-      const visible = reduced ? N : Math.min(N, Math.max(GROW_MIN, Math.floor(GROW_MIN + (N-GROW_MIN)*k)));
+      /* reduced-motionでも「育つ」演出はスクロール起点の軽量アニメとして残す。
+         回転・マウス視差（下のif(!reduced)ブロック）だけ止める */
+      const visible = Math.min(N, Math.max(GROW_MIN, Math.floor(GROW_MIN + (N-GROW_MIN)*k)));
       geo.setDrawRange(0, visible);
       const win = Math.max(0, visible-14);
       geoG.setDrawRange(win, visible-win);
@@ -1571,8 +1575,7 @@ footer{
       const to = +el.dataset.to;
       const c = el.querySelector('.cnt');
       if(!c) return;
-      if(reduced){ c.textContent = to; return; }
-      const t0 = performance.now(), dur = 1500;
+      const t0 = performance.now(), dur = reduced ? 400 : 1500;
       (function tk(t){
         const k = Math.min(1,(t-t0)/dur);
         c.textContent = Math.round(to*(1-Math.pow(1-k,3)));
