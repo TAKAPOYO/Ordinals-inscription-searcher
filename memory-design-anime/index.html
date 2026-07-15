@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MEMORY DESIGN | マンガで読む</title>
+<meta name="description" content="体感9割の人が、AIを使いこなせていない。マンガで5分。あなたのAIが「同僚」に変わるまでの物語。">
+<meta name="theme-color" content="#0e0e10">
+<meta property="og:title" content="MEMORY DESIGN | マンガで読む">
+<meta property="og:description" content="マンガで5分。あなたのAIが「同僚」に変わるまでの物語。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://memory-design-anime.surge.sh/">
+<meta property="og:image" content="https://memory-design-anime.surge.sh/assets/manga_page_01.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=M+PLUS+Rounded+1c:wght@700;900&display=swap" rel="stylesheet">
@@ -28,12 +36,50 @@
   h1,h2,h3{ font-family:"Shippori Mincho B1", serif; font-weight:700; }
   .wrap{ max-width:720px; margin:0 auto; padding:0 24px; }
 
+  /* ===== 読了プログレスバー ===== */
+  .progress{
+    position:fixed;
+    top:0; left:0;
+    height:3px;
+    width:0;
+    background:linear-gradient(90deg, var(--green-light), #7fb894);
+    z-index:60;
+  }
+
+  /* ===== スクロールリビール ===== */
+  .reveal{
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.on{
+    opacity:1;
+    transform:none;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ transform:none; transition:opacity .5s ease; }
+  }
+
   /* ===== HERO ===== */
   .hero{
+    position:relative;
+    overflow:hidden;
     padding:90px 20px 70px;
     text-align:center;
     background:linear-gradient(180deg, #0e0e10 0%, #14201a 100%);
   }
+  /* マンガの網点（ハーフトーン）を薄く敷く */
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:radial-gradient(rgba(127,184,148,.13) 1px, transparent 1.6px);
+    background-size:20px 20px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 20%, #000 0%, transparent 75%);
+    mask-image:radial-gradient(ellipse 90% 80% at 50% 20%, #000 0%, transparent 75%);
+    pointer-events:none;
+  }
+  .hero > *{ position:relative; }
   .hero .eyebrow{
     font-size:13px;
     letter-spacing:.25em;
@@ -125,24 +171,31 @@
     border-radius:4px;
     box-shadow:0 8px 30px rgba(0,0,0,.15);
   }
-  .manga-page--final{
+  /* 最終コマのロゴ：基準を画像そのものに揃え、文字サイズも画像幅に比例させる
+     （viewport基準だとスマホで白枠からずれるため） */
+  .final-frame{
     position:relative;
+    container-type:inline-size;
   }
   .final-logo{
     position:absolute;
-    left:35%;
-    right:13%;
-    bottom:4%;
-    height:13%;
+    left:35.5%;
+    right:13.5%;
+    bottom:3.8%;
+    height:13.5%;
     display:flex;
     align-items:center;
     justify-content:center;
     font-family:"M PLUS Rounded 1c", sans-serif;
     font-weight:900;
     color:var(--green-light);
-    font-size:clamp(22px, 4.4vw, 44px);
+    font-size:4.4vw; /* コンテナクエリ非対応ブラウザ用フォールバック */
     letter-spacing:.06em;
+    white-space:nowrap;
     pointer-events:none;
+  }
+  @supports (font-size: 1cqw){
+    .final-logo{ font-size:4.5cqw; }
   }
 
   /* ===== PAPER SECTION (post-manga, cream bg) ===== */
@@ -395,17 +448,23 @@
     letter-spacing:.15em;
   }
 
-  /* sticky mini CTA */
+  /* sticky mini CTA（読み始めたら出現、最後のCTAが見えたら引っ込む） */
   .sticky-cta{
     position:fixed;
     left:0; right:0; bottom:0;
     background:rgba(14,14,16,.92);
     backdrop-filter:blur(6px);
-    padding:12px 20px;
+    padding:12px 20px calc(12px + env(safe-area-inset-bottom));
     display:flex;
     justify-content:center;
     z-index:50;
     border-top:1px solid #26281f;
+    transform:translateY(110%);
+    transition:transform .35s ease;
+  }
+  .sticky-cta.show{ transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    .sticky-cta{ transition:none; }
   }
   .sticky-cta a{
     background:var(--green-light);
@@ -420,6 +479,8 @@
 </head>
 <body>
 
+<div class="progress" aria-hidden="true"></div>
+
 <section class="hero">
   <div class="eyebrow">MEMORY DESIGN — MANGA EDITION</div>
   <h1>体感9割の人が、<br>AIを使いこなせていない。</h1>
@@ -430,9 +491,9 @@
   <div class="wrap">
     <p class="q">2025年11月、世界最大の経営コンサル会社マッキンゼーが、世界105カ国・約2,000社を対象にした調査を発表した。</p>
     <div class="stat-row">
-      <div class="stat"><div class="num">88%</div><div class="label">「AIを使っている」<br>と答えた企業</div></div>
-      <div class="stat"><div class="num">6%</div><div class="label">利益に5%以上<br>貢献できている企業</div></div>
-      <div class="stat"><div class="num">82%</div><div class="label">使っているのに<br>成果が出ていない企業</div></div>
+      <div class="stat"><div class="num" data-count="88" data-suffix="%">88%</div><div class="label">「AIを使っている」<br>と答えた企業</div></div>
+      <div class="stat"><div class="num" data-count="6" data-suffix="%">6%</div><div class="label">利益に5%以上<br>貢献できている企業</div></div>
+      <div class="stat"><div class="num" data-count="82" data-suffix="%">82%</div><div class="label">使っているのに<br>成果が出ていない企業</div></div>
     </div>
     <p class="punch">10社のうち9社がAIを使い、成果を出せているのは<strong>わずか6%</strong>。<br>この差は、AIの性能じゃない。<br>次のページは、その差の正体に気づいた、ある経営者の物語。</p>
     <div class="scroll-cue">↓ SCROLL</div>
@@ -440,15 +501,17 @@
 </section>
 
 <section class="manga-section">
-  <div class="manga-page"><img src="assets/manga_page_01.png" alt="MEMORY DESIGN マンガ 1ページ目" loading="lazy"></div>
-  <div class="manga-page"><img src="assets/manga_page_02.png" alt="MEMORY DESIGN マンガ 2ページ目" loading="lazy"></div>
-  <div class="manga-page"><img src="assets/manga_page_03.png" alt="MEMORY DESIGN マンガ 3ページ目" loading="lazy"></div>
-  <div class="manga-page"><img src="assets/manga_page_04.png" alt="MEMORY DESIGN マンガ 4ページ目" loading="lazy"></div>
-  <div class="manga-page"><img src="assets/manga_page_05.png" alt="MEMORY DESIGN マンガ 5ページ目" loading="lazy"></div>
-  <div class="manga-page"><img src="assets/manga_page_06.png" alt="MEMORY DESIGN マンガ 6ページ目" loading="lazy"></div>
+  <div class="manga-page"><img src="assets/manga_page_01.png" alt="MEMORY DESIGN マンガ 1ページ目" width="1536" height="1024" fetchpriority="high" decoding="async"></div>
+  <div class="manga-page"><img src="assets/manga_page_02.png" alt="MEMORY DESIGN マンガ 2ページ目" width="1536" height="1024" loading="lazy" decoding="async"></div>
+  <div class="manga-page"><img src="assets/manga_page_03.png" alt="MEMORY DESIGN マンガ 3ページ目" width="1536" height="1024" loading="lazy" decoding="async"></div>
+  <div class="manga-page"><img src="assets/manga_page_04.png" alt="MEMORY DESIGN マンガ 4ページ目" width="1536" height="1024" loading="lazy" decoding="async"></div>
+  <div class="manga-page"><img src="assets/manga_page_05.png" alt="MEMORY DESIGN マンガ 5ページ目" width="1536" height="1024" loading="lazy" decoding="async"></div>
+  <div class="manga-page"><img src="assets/manga_page_06.png" alt="MEMORY DESIGN マンガ 6ページ目" width="1536" height="1024" loading="lazy" decoding="async"></div>
   <div class="manga-page manga-page--final">
-    <img src="assets/manga_page_07.png" alt="MEMORY DESIGN マンガ 7ページ目" loading="lazy">
-    <div class="final-logo">MEMORY DESIGN</div>
+    <div class="final-frame">
+      <img src="assets/manga_page_07.png" alt="MEMORY DESIGN マンガ 7ページ目" width="1536" height="1024" loading="lazy" decoding="async">
+      <div class="final-logo" aria-hidden="true">MEMORY DESIGN</div>
+    </div>
   </div>
 </section>
 
@@ -608,6 +671,95 @@
 <div class="sticky-cta">
   <a href="https://form.run/@taka3210" target="_blank" rel="noopener">面談を申し込む</a>
 </div>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- 読了プログレスバー ---- */
+  var bar = document.querySelector('.progress');
+  var ticking = false;
+  function updateBar(){
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - window.innerHeight;
+    bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ requestAnimationFrame(updateBar); ticking = true; }
+  }, {passive:true});
+  updateBar();
+
+  /* ---- スクロールリビール ---- */
+  var targets = document.querySelectorAll(
+    '.lead .q, .stat-row, .lead .punch, .manga-page, ' +
+    '.paper-section .section-eyebrow, .paper-section .section-title, .paper-section .section-body, ' +
+    '.card, .timeline, .math-table, .math-total, .step, .voice-card, .profile, ' +
+    '.cta-section .title, .cta-section .sub, .cta-section .cta-button'
+  );
+  targets.forEach(function(el){ el.classList.add('reveal'); });
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); }
+      });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.05});
+    targets.forEach(function(el){ io.observe(el); });
+  }else{
+    targets.forEach(function(el){ el.classList.add('on'); });
+  }
+
+  /* ---- 統計カウントアップ（reduced-motionでは短縮版） ---- */
+  var nums = document.querySelectorAll('.num[data-count]');
+  function countUp(el){
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    var dur = reduced ? 400 : 900;
+    var start = null;
+    function frame(t){
+      if(start === null) start = t;
+      var p = Math.min((t - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if(p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  if('IntersectionObserver' in window){
+    var numIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ countUp(e.target); numIo.unobserve(e.target); }
+      });
+    }, {threshold:0.6});
+    nums.forEach(function(el){ numIo.observe(el); });
+  }
+
+  /* ---- sticky CTA：マンガを読み始めたら出現、最終CTAが見えたら隠す ---- */
+  var sticky = document.querySelector('.sticky-cta');
+  var manga = document.querySelector('.manga-section');
+  var finalCta = document.querySelector('.cta-section');
+  if(sticky && manga && finalCta){
+    var pastManga = false, ctaVisible = false;
+    var syncSticky = function(){
+      sticky.classList.toggle('show', pastManga && !ctaVisible);
+    };
+    var checkManga = function(){
+      if(!pastManga && manga.getBoundingClientRect().top < window.innerHeight * .6){
+        pastManga = true;
+      }
+      syncSticky();
+    };
+    window.addEventListener('scroll', checkManga, {passive:true});
+    checkManga();
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ ctaVisible = e.isIntersecting; });
+        syncSticky();
+      }, {threshold:0.15}).observe(finalCta);
+    }
+  }
+})();
+</script>
 
 </body>
 </html>
