@@ -1415,7 +1415,8 @@
   }
 
   function initCinema(){
-    if(reduced || qs.get('static') === '1') return;
+    /* スマホはシネマ演出なし＝普通の縦並びで読ませる（PCのみシネマ） */
+    if(reduced || qs.get('static') === '1' || matchMedia('(max-width: 760px)').matches) return;
     try{
       document.documentElement.classList.add('cine');
       cinema.style.height = (N * 72) + 'vh';
