@@ -159,12 +159,12 @@
   @keyframes cueBob{ 0%,100%{transform:none;} 50%{transform:translateY(6px);} }
 
   /* ===== LEAD（マッキンゼー統計フック・夜） ===== */
-  .lead{
+  .lead-sec{
     background:linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
     padding:84px 20px 80px;
     text-align:center;
   }
-  .lead .q{
+  .lead-sec .q{
     font-size:15px; color:var(--text-dim);
     line-height:2; max-width:460px; margin:0 auto 30px;
   }
@@ -186,12 +186,12 @@
     line-height:1; margin-bottom:9px;
   }
   .stat .label{ font-size:12px; color:#8f94a0; line-height:1.7; }
-  .lead .punch{
+  .lead-sec .punch{
     font-size:16px; line-height:2.1;
     max-width:470px; margin:0 auto;
   }
-  .lead .punch strong{ color:var(--green-glow); }
-  .lead .cue{
+  .lead-sec .punch strong{ color:var(--green-glow); }
+  .lead-sec .cue{
     margin-top:40px; font-size:11.5px;
     letter-spacing:.25em; color:#6d7280;
   }
@@ -380,152 +380,237 @@
     .btn-cta{ padding:18px 30px; font-size:15px; white-space:nowrap; }
   }
 
-  /* ===== PAPER SECTIONS（朝の世界） ===== */
-  .paper-section{
-    background:var(--paper);
-    color:var(--text-dark);
-    padding:72px 0;
+  /* =====================================================
+     以降、本家LP（memory-design.surge.sh）と同一のセクション
+     変数は --md-* に名前空間化して本家の値をそのまま使用
+  ===================================================== */
+  :root{
+    --md-night:#0C1210; --md-night2:#111A16; --md-deep:#1E4436;
+    --md-green:#2E7D5B; --md-glow:#5DC79A;
+    --md-paper:#F2F4EF; --md-paper2:#E9EDE6;
+    --md-ink:#1C2420; --md-inksoft:#4A554F; --md-mist:#8FA69B;
+    --md-white:#F7FAF7; --md-hairline:rgba(255,255,255,.08);
+    --md-serif:'Shippori Mincho B1', serif;
+    --md-sans:'Zen Kaku Gothic New', sans-serif;
   }
-  .paper-section.dim{ background:var(--paper-dim); }
-  .section-eyebrow{
-    font-size:12px; letter-spacing:.22em;
-    color:var(--green);
-    text-align:center; margin-bottom:14px;
+  .sec-dark{ background:var(--md-night); color:var(--md-white); padding:96px 0; }
+  .sec-paper{ background:var(--md-paper); color:var(--md-ink); padding:96px 0; }
+  .sec-paper.alt{ background:var(--md-paper2); }
+  .sec-dark .wrap, .sec-paper .wrap{ max-width:860px; }
+  .wrap-wide{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  .sec-dark .eyebrow, .sec-paper .eyebrow{
+    font-family:var(--md-sans);
+    font-size:12px; letter-spacing:.34em; font-weight:700;
+    text-transform:uppercase;
   }
-  .section-title{
-    font-size:clamp(22px, 4.6vw, 32px);
-    line-height:1.6; text-align:center;
-    margin:0 0 28px;
+  .sec-dark .eyebrow{ color:var(--md-glow); }
+  .sec-paper .eyebrow{ color:var(--md-green); }
+  .sec-dark h2, .sec-paper h2{
+    font-family:var(--md-serif); font-weight:700;
+    font-size:clamp(26px,4.6vw,40px);
+    line-height:1.55; letter-spacing:.04em;
+    margin:18px 0 28px;
   }
-  .section-body{
-    font-size:15px; line-height:2;
-    color:#4a463d;
-    max-width:560px; margin:0 auto;
+  .sec-dark h2{ color:var(--md-white); }
+  .sec-dark p, .sec-paper p{ margin:0 0 1.4em; line-height:1.9; }
+  .sec-dark p{ color:#C7D2CA; }
+  .sec-dark strong{ color:var(--md-white); }
+  .sec-paper strong{ color:var(--md-ink); font-weight:700; }
+  .sec-dark .lead, .sec-paper .lead{ font-size:clamp(16px,2.2vw,18px); }
+  .sec-paper .accent{ color:var(--md-green); font-weight:700; }
+  .sec-dark .accent{ color:var(--md-glow); font-weight:700; }
+  .sec-dark .note, .sec-paper .note{ font-size:13px; color:var(--md-inksoft); }
+  .sec-dark .note{ color:var(--md-mist); }
+  .rv{ opacity:0; transform:translateY(24px); transition:opacity .9s ease, transform .9s ease; }
+  .rv.on{ opacity:1; transform:none; }
+  .btn{
+    display:inline-block;
+    font-family:var(--md-sans); font-weight:700; font-size:16px;
+    letter-spacing:.08em; padding:18px 44px;
+    border-radius:999px; text-decoration:none;
+    transition:transform .25s ease, box-shadow .25s ease, background .25s ease;
   }
-  .section-body + .section-body{ margin-top:20px; }
-  .section-body strong{ color:var(--text-dark); }
+  .btn-primary{
+    background:var(--md-green); color:#fff;
+    box-shadow:0 8px 32px rgba(46,125,91,.35);
+  }
+  .btn-primary:hover{
+    transform:translateY(-2px); background:#35906A;
+    box-shadow:0 12px 40px rgba(46,125,91,.5);
+  }
+  .pull{
+    font-family:var(--md-serif); font-weight:700;
+    font-size:clamp(22px,4vw,32px);
+    line-height:1.7; letter-spacing:.05em;
+    text-align:center; padding:24px 0;
+  }
+  .sec-dark .pull{ color:var(--md-white); }
 
-  .card-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
-    gap:18px; margin:36px auto 0; max-width:640px;
+  /* 忘却チャットデモ */
+  .chat-demo{
+    max-width:520px; margin:40px auto 8px;
+    background:#fff; border:1px solid #E3E8E1; border-radius:16px;
+    padding:24px 22px 18px;
+    box-shadow:0 20px 60px rgba(28,36,32,.10);
+    min-height:260px;
   }
-  .card{
-    background:#fff; border:1px solid #e4dfd2;
-    border-radius:12px; padding:24px 20px;
-  }
-  .card h3{ font-size:16px; margin:0 0 10px; color:var(--green); }
-  .card p{ font-size:13.5px; line-height:1.9; color:#5a564c; margin:0; }
+  .chat-demo .head{ display:flex; justify-content:space-between; font-size:11px; letter-spacing:.18em; color:var(--md-mist); margin-bottom:16px; font-weight:700; }
+  .bub{ max-width:86%; padding:11px 17px; border-radius:14px; font-size:13.5px; line-height:1.8; margin-bottom:11px; opacity:0; }
+  .bub.user{ margin-left:auto; background:var(--md-deep); color:#fff; border-bottom-right-radius:4px; }
+  .bub.ai{ background:#EFF3EE; color:var(--md-inksoft); border-bottom-left-radius:4px; }
+  .chat-day{ text-align:center; font-size:10px; letter-spacing:.3em; color:var(--md-mist); margin:14px 0; opacity:0; font-weight:700; }
+  @keyframes bubIn{0%{opacity:0;transform:translateY(10px)}7%{opacity:1;transform:none}38%{opacity:1;filter:blur(0)}48%{opacity:0;filter:blur(8px)}100%{opacity:0}}
+  @keyframes dayIn{0%,46%{opacity:0}54%,84%{opacity:1}94%,100%{opacity:0}}
+  @keyframes bub2In{0%,58%{opacity:0;transform:translateY(10px)}66%{opacity:1;transform:none}96%{opacity:1}100%{opacity:0}}
+  .chat-demo.play .b1{ animation:bubIn 7.5s ease infinite; }
+  .chat-demo.play .b2{ animation:bubIn 7.5s ease .6s infinite; }
+  .chat-demo.play .chat-day{ animation:dayIn 7.5s ease infinite; }
+  .chat-demo.play .b3{ animation:bub2In 7.5s ease infinite; }
+  .chat-cap{ text-align:center; font-size:12.5px; color:var(--md-inksoft); margin-bottom:2em; }
 
-  .timeline{ max-width:600px; margin:36px auto 0; }
-  .tl-item{
-    display:flex; gap:20px; padding:18px 0;
-    border-bottom:1px dashed #d8d2c2;
+  /* 朝のシーン */
+  .phone-notif{
+    max-width:480px; margin:40px auto;
+    background:#fff; border-radius:16px;
+    box-shadow:0 20px 60px rgba(28,36,32,.14);
+    padding:22px 24px;
+    border:1px solid #E3E8E1;
   }
-  .tl-item:last-child{ border-bottom:none; }
-  .tl-time{
-    flex:0 0 70px;
-    font-family:"Shippori Mincho B1", serif;
-    font-weight:700; color:var(--green); font-size:15px;
+  .phone-notif .app{ display:flex; align-items:center; gap:10px; font-size:12px; color:var(--md-inksoft); margin-bottom:10px; letter-spacing:.04em; }
+  .phone-notif .dot{ width:10px; height:10px; border-radius:3px; background:var(--md-green); display:inline-block; }
+  .phone-notif .msg{ font-size:15px; line-height:1.8; color:var(--md-ink); font-weight:500; }
+  .morning-list{ max-width:560px; margin:36px auto 0; display:grid; gap:12px; }
+  .m-item{
+    background:#fff; border:1px solid #E3E8E1; border-radius:12px;
+    padding:18px 22px; font-size:14.5px;
+    display:flex; gap:14px; align-items:baseline;
   }
-  .tl-text{ font-size:14px; line-height:1.8; color:#4a463d; }
+  .m-item .t{ font-family:var(--md-serif); font-weight:700; color:var(--md-green); font-size:13px; white-space:nowrap; letter-spacing:.05em; }
+  .brief-shot{ max-width:720px; margin:48px auto 0; }
+  .brief-shot img{
+    width:100%; display:block;
+    border-radius:14px; border:1px solid #DDE3DA;
+    box-shadow:0 24px 64px rgba(28,36,32,.18);
+  }
+  .brief-shot figcaption{ font-size:12.5px; color:var(--md-inksoft); text-align:center; margin-top:14px; letter-spacing:.04em; }
 
-  .math-table{ max-width:560px; margin:32px auto 0; width:100%; }
-  .math-row{
-    display:flex; justify-content:space-between; gap:12px;
-    padding:14px 0; border-bottom:1px solid #ddd6c5;
-    font-size:14px;
-  }
-  .math-row .item{ color:#4a463d; }
-  .math-row .val{
-    font-family:"Shippori Mincho B1", serif;
-    font-weight:700; color:var(--green); white-space:nowrap;
-  }
-  .math-total{ text-align:center; margin-top:24px; font-size:15px; color:var(--text-dark); }
-  .math-total .big{
-    font-family:"Shippori Mincho B1", serif;
-    font-size:clamp(26px,5vw,34px);
-    color:var(--green); display:block; margin:8px 0;
-  }
-
-  .steps{ max-width:600px; margin:36px auto 0; }
-  .step{ display:flex; gap:20px; margin-bottom:32px; }
-  .step:last-child{ margin-bottom:0; }
-  .step-num{
-    flex:0 0 40px; height:40px; border-radius:50%;
-    background:var(--green); color:#fff;
-    display:flex; align-items:center; justify-content:center;
-    font-family:"Shippori Mincho B1", serif;
-    font-weight:700; font-size:16px;
-  }
-  .step-body h3{ font-size:16px; margin:4px 0 8px; color:var(--text-dark); }
-  .step-body p{ font-size:13.5px; line-height:1.9; color:#5a564c; margin:0; }
-
-  .voice-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
-    gap:18px; max-width:680px; margin:36px auto 0;
-  }
-  .voice-card{
-    background:#fff; border:1px solid #e4dfd2;
-    border-radius:12px; padding:26px 22px;
-  }
-  .voice-card .tag{ font-size:11px; letter-spacing:.1em; color:var(--green); margin-bottom:10px; }
-  .voice-card .quote{
-    font-family:"Shippori Mincho B1", serif;
-    font-size:15px; line-height:1.8;
-    color:var(--text-dark); margin:0 0 12px;
-  }
-  .voice-card .detail{ font-size:12.5px; line-height:1.8; color:#6b675c; margin:0; }
-
-  .profile{
-    display:flex; gap:28px; align-items:flex-start;
-    max-width:600px; margin:36px auto 0; flex-wrap:wrap;
-  }
-  .profile-name{ flex:1 1 200px; }
-  .profile-name .jp{ font-size:20px; font-weight:700; color:var(--text-dark); margin-bottom:4px; }
-  .profile-name .en{ font-size:12px; letter-spacing:.1em; color:#8a8579; }
-  .profile-text{ flex:2 1 320px; font-size:14px; line-height:2; color:#4a463d; }
-
-  /* ===== FINAL CTA（ブランド緑＝変化の色） ===== */
-  .cta-section{
-    position:relative;
-    background:linear-gradient(180deg, #123227 0%, var(--green) 100%);
-    padding:100px 20px 110px;
+  /* 2つの定義 */
+  .defs{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:40px 0; }
+  .def{ background:#fff; border:1px solid #E3E8E1; border-radius:14px; padding:32px 30px; }
+  .def h3{ font-family:var(--md-serif); font-size:22px; font-weight:700; letter-spacing:.06em; margin:0 0 14px; }
+  .def h3 span{ display:block; font-family:var(--md-sans); font-size:11px; letter-spacing:.3em; color:var(--md-green); font-weight:700; margin-bottom:8px; }
+  .def p{ font-size:14.5px; margin:0; color:var(--md-inksoft); }
+  .def-eq{
     text-align:center;
-    overflow:hidden;
+    font-family:var(--md-serif); font-size:clamp(18px,3vw,24px); font-weight:700;
+    margin:36px 0 0; letter-spacing:.06em;
   }
-  .cta-section::before{
-    content:"";
-    position:absolute; inset:0;
-    background-image:radial-gradient(rgba(127,184,148,.16) 1px, transparent 1.6px);
-    background-size:20px 20px;
-    -webkit-mask-image:radial-gradient(ellipse 85% 75% at 50% 40%, #000 0%, transparent 75%);
-    mask-image:radial-gradient(ellipse 85% 75% at 50% 40%, #000 0%, transparent 75%);
-    pointer-events:none;
+
+  /* 仕組み */
+  .tools{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:40px 0; }
+  .tool{ background:#fff; border:1px solid #E3E8E1; border-radius:14px; padding:32px 30px; }
+  .tool h3{ font-family:var(--md-sans); font-weight:700; font-size:19px; margin:0 0 12px; letter-spacing:.02em; }
+  .tool h3 small{ display:block; font-size:11.5px; color:var(--md-green); letter-spacing:.14em; font-weight:700; margin-top:4px; }
+  .tool p{ font-size:14.5px; margin-bottom:.8em; color:var(--md-inksoft); }
+  .flow{ display:flex; align-items:center; justify-content:center; gap:18px; margin:44px 0 8px; flex-wrap:wrap; }
+  .flow .box{ background:#fff; border:1.5px solid var(--md-green); border-radius:12px; padding:16px 24px; text-align:center; min-width:150px; }
+  .flow .box b{ display:block; font-size:15px; }
+  .flow .box span{ font-size:12px; color:var(--md-inksoft); }
+  .flow .arr{ font-family:var(--md-serif); color:var(--md-green); font-size:22px; font-weight:700; }
+
+  /* 複利タイムライン */
+  .growth{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin:48px 0 8px; }
+  .g-step{ text-align:center; }
+  .g-step canvas{
+    width:100%; aspect-ratio:1/1; display:block;
+    background:var(--md-night2); border:1px solid var(--md-hairline); border-radius:12px;
   }
-  .cta-section > *{ position:relative; }
-  .cta-section .title{
-    font-family:"Shippori Mincho B1", serif;
-    font-weight:700;
-    font-size:clamp(25px, 5.2vw, 40px);
-    margin:0 0 18px;
-    color:#f5f2ec;
+  .g-step .g-t{ font-family:var(--md-serif); font-weight:700; color:var(--md-white); margin-top:14px; font-size:16px; letter-spacing:.05em; }
+  .g-step .g-d{ font-size:12.5px; color:var(--md-mist); line-height:1.7; margin-top:4px; }
+  .proof{ margin-top:64px; }
+  .proof-title{
+    font-family:var(--md-serif); font-weight:700;
+    font-size:clamp(19px,3.2vw,27px);
+    line-height:1.8; letter-spacing:.04em;
+    text-align:center; color:var(--md-white); margin-bottom:32px;
   }
-  .cta-section .sub{
-    color:#c9dbd0; font-size:15px; line-height:2;
-    max-width:480px; margin:0 auto 38px;
+  .proof-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .proof-grid figure{ margin:0; }
+  .proof-grid img{ width:100%; display:block; border-radius:12px; border:1px solid var(--md-hairline); }
+  .proof-grid figcaption{ font-size:12.5px; color:var(--md-mist); text-align:center; margin-top:12px; letter-spacing:.04em; }
+
+  /* 時間の数字 */
+  .time-math{ max-width:620px; margin:40px auto; border:1px solid #DDE3DA; border-radius:14px; background:#fff; overflow:hidden; }
+  .time-math .row{ display:flex; justify-content:space-between; align-items:center; padding:16px 26px; border-bottom:1px solid #EEF1EC; font-size:14.5px; }
+  .time-math .row:last-child{ border-bottom:none; }
+  .time-math .row.total{ background:var(--md-deep); color:#fff; font-weight:700; font-size:15.5px; }
+  .time-math .row.total .v{ color:var(--md-glow); }
+  .time-math .v{ font-family:var(--md-serif); font-weight:700; font-size:17px; }
+
+  /* サービス3本柱 */
+  .pillars{ display:grid; gap:18px; margin:40px 0; }
+  .pillar{ background:#fff; border:1px solid #E3E8E1; border-radius:14px; padding:30px 32px; }
+  .pillar h3{ font-family:var(--md-serif); font-size:19px; font-weight:700; letter-spacing:.04em; margin:0 0 10px; }
+  .pillar p{ font-size:14.5px; color:var(--md-inksoft); margin:0; }
+  .pillar .tag{ display:inline-block; font-size:11px; font-weight:700; letter-spacing:.2em; color:var(--md-green); border:1px solid var(--md-green); border-radius:999px; padding:3px 14px; margin-bottom:14px; }
+  .addon{ margin-top:44px; border:1px dashed #C4CFC2; border-radius:16px; padding:36px 32px; background:rgba(255,255,255,.5); }
+  .addon-title{ font-family:var(--md-serif); font-size:clamp(17px,2.6vw,21px); font-weight:700; text-align:center; letter-spacing:.04em; margin:0 0 24px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+  .chip{ background:#fff; border:1px solid #D5DDD3; border-radius:999px; padding:8px 20px; font-size:13.5px; font-weight:500; color:var(--md-ink); }
+  .no-subsc{ text-align:center; font-family:var(--md-serif); font-weight:700; font-size:clamp(17px,2.6vw,21px); margin-top:36px; letter-spacing:.05em; }
+
+  /* 顧客の声 */
+  .cases{ display:grid; gap:20px; margin:40px 0; }
+  .case{ background:#fff; border:1px solid #E3E8E1; border-radius:14px; padding:30px 32px; }
+  .case .who{ font-size:12px; font-weight:700; letter-spacing:.16em; color:var(--md-green); margin-bottom:12px; }
+  .case blockquote{ font-family:var(--md-serif); font-size:16.5px; font-weight:600; line-height:1.9; margin:0 0 12px; letter-spacing:.02em; }
+  .case p{ font-size:13.5px; color:var(--md-inksoft); margin:0; }
+
+  /* 料金 */
+  .price-frame{ max-width:640px; margin:44px auto 0; text-align:center; }
+  .price-usual{ color:var(--md-mist); font-size:15px; }
+  .price-usual b{ font-family:var(--md-serif); font-size:clamp(22px,3.6vw,30px); color:#C7D2CA; font-weight:700; }
+  .price-strike{ position:relative; display:inline-block; padding:0 6px; }
+  .price-strike::after{ content:""; position:absolute; left:0; right:0; top:54%; height:2px; background:var(--md-glow); transform:rotate(-6deg); }
+  .price-md{ margin-top:26px; font-family:var(--md-serif); font-weight:700; font-size:clamp(20px,3.4vw,28px); color:var(--md-white); line-height:1.8; letter-spacing:.04em; }
+  .price-md .accent{ color:var(--md-glow); }
+
+  /* プロフィール */
+  .profile{ display:grid; grid-template-columns:260px 1fr; gap:40px; align-items:start; margin-top:40px; }
+  .profile-photo img{ width:100%; display:block; border-radius:16px; box-shadow:0 16px 44px rgba(28,36,32,.16); }
+  .profile .name-block{ border-left:3px solid var(--md-green); padding-left:20px; margin-top:22px; }
+  .profile .name{ font-family:var(--md-serif); font-size:26px; font-weight:700; letter-spacing:.1em; }
+  .profile .name small{ display:block; font-family:var(--md-sans); font-size:12px; letter-spacing:.2em; color:var(--md-green); font-weight:700; margin-top:6px; }
+  .profile .bio p{ font-size:14.5px; color:var(--md-inksoft); }
+  .career{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:16px 0 22px; font-size:13px; font-weight:700; }
+  .career .c{ background:#fff; border:1px solid #DDE3DA; border-radius:999px; padding:6px 16px; }
+  .career .a{ color:var(--md-green); font-family:var(--md-serif); }
+
+  /* 最終CTA */
+  .final{ position:relative; text-align:center; overflow:hidden; padding:130px 0; }
+  #graph2{ position:absolute; inset:0; width:100%; height:100%; display:block; opacity:.55; }
+  .final .inner{ position:relative; z-index:2; }
+  .final h2{ font-size:clamp(26px,5vw,44px); }
+  .final .lead{ color:#C7D2CA; max-width:520px; margin:0 auto 40px; }
+
+  footer{
+    background:#080D0B; color:var(--md-mist);
+    text-align:center; padding:34px 24px; font-size:12px; letter-spacing:.08em;
   }
-  .cta-section .flow{
-    margin-top:24px;
-    font-size:12.5px; line-height:2;
-    color:#a8c4b4;
-    max-width:520px; margin-left:auto; margin-right:auto;
+
+  @media (max-width:760px){
+    .sec-dark, .sec-paper{ padding:72px 0; }
+    .defs, .tools{ grid-template-columns:1fr; }
+    .growth{ grid-template-columns:repeat(2,1fr); }
+    .proof-grid{ grid-template-columns:1fr; }
+    .profile{ grid-template-columns:1fr; }
+    .profile-photo{ max-width:300px; margin:0 auto; }
+    .flow{ flex-direction:column; }
+    .flow .arr{ transform:rotate(90deg); }
   }
-  .cta-section .flow strong{ color:#dcebe2; }
-  .brand-tag{
-    margin-top:44px; font-size:12px;
-    color:#7fa48e; letter-spacing:.2em;
+  @media (prefers-reduced-motion:reduce){
+    .rv{ transform:none; transition:opacity .6s ease; }
+    .chat-demo.play .b1, .chat-demo.play .b2, .chat-demo.play .b3, .chat-demo.play .chat-day{ animation:none; opacity:1; }
   }
 
   /* ===== sticky CTA ===== */
@@ -590,7 +675,7 @@
 </header>
 
 <!-- ================= LEAD ================= -->
-<section class="lead">
+<section class="lead-sec">
   <div class="wrap">
     <p class="q reveal">2025年11月、世界最大の経営コンサル会社マッキンゼーが、世界105カ国・約2,000社を対象にした調査を発表した。</p>
     <div class="stat-row reveal">
@@ -643,166 +728,360 @@
   </div>
 </section>
 
-<!-- Why It Stays a Tool -->
-<section class="paper-section dim">
+<!-- ============ 問題の正体（本家と同一） ============ -->
+<section class="sec-paper">
   <div class="wrap">
-    <div class="section-eyebrow reveal">WHY IT STAYS A TOOL</div>
-    <h2 class="section-title reveal">なぜあなたのAIは<br>「道具止まり」なのか</h2>
-    <p class="section-body reveal">
-      今日聞いたことを、明日また同じ文脈で聞いたら、相手は覚えていません。昨日話した内容を、今日のAIは知りません。毎回、初対面です。これが<strong>【記憶のないAI】</strong>です。
-    </p>
-    <p class="section-body reveal">
-      どれだけ優秀なコンサルタントでも、あなたの業界の歴史、会社の文化、過去の失敗と成功を知らない人は「教科書通りの答え」しか出せません。だから「便利なんだけど、なんか薄っぺらい」という感覚になる。AIが悪いんじゃありません。<strong>記憶を持たせていないから、答えに厚みが出ない。</strong>それだけです。
-    </p>
+    <div class="rv">
+      <span class="eyebrow">Why It Stays a Tool</span>
+      <h2>なぜあなたのAIは<br>「道具止まり」なのか</h2>
+      <p class="lead">今、どんなふうにAIを使っているか、振り返ってみてください。</p>
+      <p>「うちは飲食業で、スタッフが〇人いて、今の課題は人手不足で……」<br>「会社を経営していて、売上は横ばいで、来期どう動くか悩んでいて……」<br>「クリニックをやっていて、日中は診療、夜は書類とスタッフの悩みで……」</p>
+      <p><strong>この説明、先週も同じことを打ち込んでいませんでしたか？</strong></p>
+    </div>
+    <div class="chat-demo rv" id="chatDemo">
+      <div class="head"><span>AI CHAT</span><span>MEMORY: OFF</span></div>
+      <div class="bub user b1">うちは飲食業で、スタッフが12人いて、今の課題は人手不足で……</div>
+      <div class="bub ai b2">ご状況ありがとうございます。一般的には、採用チャネルの見直しと定着施策が有効です。</div>
+      <div class="chat-day">— 翌日 —</div>
+      <div class="bub user b3">うちは飲食業で、スタッフが12人いて……（また最初から）</div>
+    </div>
+    <p class="chat-cap rv">昨日話したことを、今日のAIは知りません。</p>
+    <div class="rv">
+      <p>今日聞いたことを、明日また同じ文脈で聞いたら、相手は覚えていません。昨日話した内容を、今日のAIは知りません。<span class="accent">毎回、初対面です。</span></p>
+      <p>これが【記憶のないAI】です。どれだけ優秀なコンサルタントでも、あなたの業界の歴史、会社の文化、過去の失敗と成功を知らない人は「教科書通りの答え」しか出せません。だから「便利なんだけど、なんか薄っぺらい」という感覚になるんです。</p>
+      <p>これはAIが悪いんじゃありません。</p>
+      <p class="pull">AIに<span class="accent">記憶</span>を持たせていないから、<br>答えに厚みが出ない。</p>
+      <p style="text-align:center">それだけです。</p>
+    </div>
   </div>
 </section>
 
-<!-- Memory & Identity -->
-<section class="paper-section">
+<!-- ============ 朝6時のシーン（本家と同一） ============ -->
+<section class="sec-paper alt">
   <div class="wrap">
-    <div class="section-eyebrow reveal">MEMORY &amp; IDENTITY</div>
-    <h2 class="section-title reveal">「記憶」と「アイデンティティ」。<br>2つ揃って、右腕になる。</h2>
-    <div class="card-grid">
-      <div class="card reveal">
-        <h3>MEMORY｜記憶</h3>
-        <p>会社の歴史、過去の判断、今の状況、積み上げてきたもの全部。「うちはこの方針で動いている」が、AIの中に積み上がっていく。</p>
+    <div class="rv">
+      <span class="eyebrow">6:00 AM</span>
+      <h2>朝6時に、全部終わっている。</h2>
+      <p class="lead">記憶を持ったAIのいる朝は、スマホの通知音で始まります。</p>
+    </div>
+    <div class="phone-notif rv">
+      <div class="app"><span class="dot"></span>今朝のブリーフ</div>
+      <div class="msg">今日の優先事項3件、昨日の積み残し2件、10時の打ち合わせ用の事前メモ、準備完了。</div>
+    </div>
+    <div class="morning-list rv">
+      <div class="m-item"><span class="t">打ち合わせ</span><span>前回の要点3行・今日のゴール・必ず確認すべき1点が揃った事前メモ。「前回どこまで話しましたっけ」に、即答できる。</span></div>
+      <div class="m-item"><span class="t">調べもの</span><span>前日の夜、フォルダに1行書いて置くだけ。「金利環境と設備投資の判断」——翌朝、論点整理まで済んだレポートが届いている。</span></div>
+      <div class="m-item"><span class="t">発信・文章</span><span>あなたの過去の文章を全部読んでいるAIが、あなたの文体で下書きを作る。直すのは15分で済む。</span></div>
+    </div>
+    <figure class="brief-shot rv">
+      <img src="assets/morning-brief.png" alt="朝6時にObsidianへ届いているブリーフの実画面" loading="lazy">
+      <figcaption>実際の画面 — 朝、こういうノートが置かれています（内容はサンプル）</figcaption>
+    </figure>
+    <div class="rv" style="margin-top:40px">
+      <p class="lead">これは全部、AIが<strong>【記憶を持っているから】</strong>できる話です。あなたの会社のこと、判断軸、文体、今週のフォーカス。全部AIが知っていて、夜のうちに処理して、朝に結果を置いておく。</p>
+      <p class="pull">「今日何をすべきか」を<br>考えることが、なくなります。</p>
+      <p class="lead" style="text-align:center">AIがすでに整理して置いてくれているから。<br><strong>あなたは判断するだけでいい。</strong></p>
+    </div>
+    <div class="rv" style="text-align:center;margin-top:56px">
+      <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+      <p class="note" style="margin-top:14px">初回1時間・オンライン。売り込みはしません。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 記憶とアイデンティティの定義（本家と同一） ============ -->
+<section class="sec-paper">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">Memory &amp; Identity</span>
+      <h2>「記憶」と「アイデンティティ」。<br>2つ揃って、右腕になる。</h2>
+    </div>
+    <div class="defs rv">
+      <div class="def">
+        <h3><span>MEMORY</span>記憶</h3>
+        <p>あなたの会社の歴史、過去の判断、今の状況、積み上げてきたもの全部。「うちはこの方針で動いている」「去年この判断をして、こうなった」。これらが全部、AIの中に積み上がっていきます。</p>
       </div>
-      <div class="card reveal">
-        <h3>IDENTITY｜アイデンティティ</h3>
-        <p>どういう役割で、何を優先し、何を絶対にしないか。あなたの判断の癖＝文脈が、行動規範として定まっていること。</p>
+      <div class="def">
+        <h3><span>IDENTITY</span>アイデンティティ</h3>
+        <p>そのAIがどういう役割で、何を優先し、どんな言葉を使い、何を絶対にしないか。「根拠のない楽観論を出さない」「数字には出典をつける」。あなたの判断の癖＝文脈が、行動規範として定まっていることです。</p>
       </div>
     </div>
-    <p class="section-body reveal" style="margin-top:32px;">
-      記憶がないAIは、便利な道具。記憶とアイデンティティがあるAIは、パートナー＝右腕。<strong>この差は3ヶ月後に初めてわかります。</strong>半年後に「やっておいてよかった」と思う。1年後に「やっていなかった人との差」を見て、背筋が凍ります。
-    </p>
-  </div>
-</section>
-
-<!-- Compound Memory -->
-<section class="paper-section dim">
-  <div class="wrap">
-    <div class="section-eyebrow reveal">COMPOUND MEMORY</div>
-    <h2 class="section-title reveal">記憶は、複利で育つ。</h2>
-    <p class="section-body reveal">積み上がった記憶の上に、次の記憶が積み上がる。あなたのAIの中で、こんなことが起きていきます。</p>
-    <div class="timeline reveal">
-      <div class="tl-item"><div class="tl-time">1ヶ月</div><div class="tl-text">文脈はまだ浅い。答えに一般論が混じる</div></div>
-      <div class="tl-item"><div class="tl-time">3ヶ月</div><div class="tl-text">会社の事情を踏まえた答えが返り始める</div></div>
-      <div class="tl-item"><div class="tl-time">6ヶ月</div><div class="tl-text">判断の記録・顧客情報・業界知識が積層する</div></div>
-      <div class="tl-item"><div class="tl-time">1年</div><div class="tl-text">会社を誰よりも知るAI。もう追いつけない差に</div></div>
-    </div>
-    <p class="section-body reveal" style="margin-top:32px;">
-      今日始めた人が1年後に積み上げている記憶を、来年始めた人は持っていません。<strong>この差は、努力では埋まりません。始めた時期が全てです。</strong>
-    </p>
-  </div>
-</section>
-
-<!-- The Math -->
-<section class="paper-section">
-  <div class="wrap">
-    <div class="section-eyebrow reveal">THE MATH</div>
-    <h2 class="section-title reveal">あなたの週13時間は、<br>どこに消えているか。</h2>
-    <div class="math-table reveal">
-      <div class="math-row"><div class="item">調べもの（業界動向・競合・技術情報）</div><div class="val">週5時間</div></div>
-      <div class="math-row"><div class="item">資料・文章作成（提案書・メール・発信）</div><div class="val">週3時間</div></div>
-      <div class="math-row"><div class="item">打ち合わせ準備（前回確認・論点整理）</div><div class="val">週2時間</div></div>
-      <div class="math-row"><div class="item">情報整理・記録（日報・議事録・メモ）</div><div class="val">週3時間</div></div>
-    </div>
-    <div class="math-total reveal">
-      合計
-      <span class="big">週13時間</span>
-      仮に半分になっても、月25〜28時間が返ってくる。<br>あなたの1時間が3万円の価値を生むなら――<strong>月75〜84万円分の機会</strong>です。
+    <p class="def-eq rv">記憶がないAIは、便利な道具。<br>記憶とアイデンティティがあるAIは、<span class="accent">パートナー＝右腕</span>。</p>
+    <div class="rv" style="margin-top:28px">
+      <p>右腕というのは比喩じゃありません。あなたが不在でも、あなたの判断軸で動ける。あなたが説明しなくても、文脈を理解して行動できる。</p>
+      <p class="lead">この差は3ヶ月後に初めてわかります。半年後に「やっておいてよかった」と思います。<strong>1年後に「やっていなかった人との差」を見て、背筋が凍ります。</strong>それくらいの変化です。</p>
     </div>
   </div>
 </section>
 
-<!-- What I Do -->
-<section class="paper-section dim">
+<!-- ============ 仕組み（本家と同一） ============ -->
+<section class="sec-paper alt">
   <div class="wrap">
-    <div class="section-eyebrow reveal">WHAT I DO</div>
-    <h2 class="section-title reveal">あなたのAIに<br>記憶とアイデンティティを宿らせる設計士</h2>
-    <div class="steps">
-      <div class="step reveal">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <h3>文脈を整理し、AIが読める形に構造化する</h3>
-          <p>仕事の内容、クライアント、積み上げてきた判断基準を整理。「言語化されていなかった判断軸」が初めて形になります。</p>
+    <div class="rv">
+      <span class="eyebrow">How It Works</span>
+      <h2>仕組みの土台はすべて<br>設計士が作ります。</h2>
+      <p class="lead">4つのツールを組み合わせて、AIに記憶とアイデンティティを組み込みます。</p>
+    </div>
+    <div class="tools rv">
+      <div class="tool">
+        <h3>Claude Code<small>ファイルシステムに住むAI</small></h3>
+        <p>Anthropic社のAI。普通のAIチャットとの決定的な違いは、<strong>あなたのパソコンの中のファイルを直接読んで、動かして、書き戻せる</strong>こと。</p>
+        <p>ChatGPTはブラウザの中にいます。Claude Codeは、あなたのPCの中に住んでいます。フォルダを指定して「これを全部読んで」と言えば、数秒で読んで理解します。</p>
+      </div>
+      <div class="tool">
+        <h3>Obsidian<small>あなたの手元に残るノート</small></h3>
+        <p>無料のノートアプリ。決定的な違いは、全ノートが<strong>あなたのPCの中に、ただのテキストファイルとして</strong>保存されること。</p>
+        <p>クラウドの中ではなく手元にあるから、Claude Codeが直接読めます。APIもプラグインも、難しい設定も要りません。</p>
+      </div>
+      <div class="tool">
+        <h3>VS Code<small>すべてが完結する司令室</small></h3>
+        <p>世界で最も使われている無料のエディタ。Claude Codeへの指示、ファイルの確認、メモの編集が<strong>1つの画面ですべて完結</strong>します。</p>
+        <p>黒い画面をいくつも行き来する必要はありません。毎日開くのはこれ1つだけです。</p>
+      </div>
+      <div class="tool">
+        <h3>GitHub<small>記憶を守る金庫</small></h3>
+        <p>ノートの変更履歴をすべて記録するバックアップ基盤。<strong>間違って消しても、過去の状態にいつでも戻せます。</strong></p>
+        <p>PCの買い替えや故障があっても、積み上げた記憶は失われません。育てた右腕を守る保険です。</p>
+      </div>
+    </div>
+    <div class="rv">
+      <p>この4つを繋ぐと、あなたのObsidianに溜まっている日報・打ち合わせ記録・アイデアメモ・顧客情報・過去の判断を、全部Claude Codeが読める状態になります。<strong>AIがあなたの仕事の【歴史】を持てるようになる</strong>んです。</p>
+      <p>運用はシンプル。最初に覚えるフォルダは、2つだけです。</p>
+    </div>
+    <div class="flow rv">
+      <div class="box"><b>投入口</b><span>1行書いて放り込む</span></div>
+      <span class="arr">→</span>
+      <div class="box" style="border-color:#C9D3C7;background:var(--md-night);color:#fff"><b style="color:#fff">夜のAI</b><span style="color:var(--md-mist)">寝ている間に処理</span></div>
+      <span class="arr">→</span>
+      <div class="box"><b>出力口</b><span>翌朝、結果が届く</span></div>
+    </div>
+    <figure class="brief-shot rv" style="max-width:960px">
+      <img src="assets/vscode-work.png" alt="VS Code上でAIが朝のブリーフを組み立てている実際の作業画面" loading="lazy">
+      <figcaption>実際の作業画面 — 夜のうちに、AIがブリーフを組み立てていく（VS Code）</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 記憶の複利（本家と同一） ============ -->
+<section class="sec-dark">
+  <div class="wrap-wide">
+    <div class="wrap rv" style="padding:0">
+      <span class="eyebrow">Compound Memory</span>
+      <h2>記憶は、複利で育つ。</h2>
+      <p class="lead" style="color:#C7D2CA">積み上がった記憶の上に、次の記憶が積み上がる。これが「記憶の複利」です。あなたのAIの中で、こんなことが起きていきます。</p>
+    </div>
+    <div class="growth rv">
+      <div class="g-step">
+        <canvas class="gc" data-n="40" aria-hidden="true"></canvas>
+        <div class="g-t">1ヶ月</div>
+        <div class="g-d">文脈はまだ浅い。<br>答えに一般論が混じる</div>
+      </div>
+      <div class="g-step">
+        <canvas class="gc" data-n="90" aria-hidden="true"></canvas>
+        <div class="g-t">3ヶ月</div>
+        <div class="g-d">会社の事情を踏まえた<br>答えが返り始める</div>
+      </div>
+      <div class="g-step">
+        <canvas class="gc" data-n="170" aria-hidden="true"></canvas>
+        <div class="g-t">6ヶ月</div>
+        <div class="g-d">判断の記録・顧客情報・<br>業界知識が積層する</div>
+      </div>
+      <div class="g-step">
+        <canvas class="gc" data-n="380" data-dense="1" aria-hidden="true"></canvas>
+        <div class="g-t">1年</div>
+        <div class="g-d">会社を誰よりも知るAI。<br>もう追いつけない差に</div>
+      </div>
+    </div>
+    <div class="proof rv">
+      <p class="proof-title">これはイメージ図ではありません。<br>実際に運用している、AIの記憶の<span class="accent">実物</span>です。</p>
+      <div class="proof-grid">
+        <figure>
+          <img src="assets/graph-real-galaxy.png" alt="実際のObsidianグラフビュー（俯瞰）" loading="lazy">
+          <figcaption>俯瞰 — 数千のメモが星団のように繋がっている</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/graph-real-close.png" alt="実際のObsidianグラフビュー（拡大）" loading="lazy">
+          <figcaption>拡大 — 日々の記録・判断・知識が互いにリンクする</figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="wrap rv" style="padding:0;margin-top:44px">
+      <p>今日始めた人が1年後に積み上げている記憶を、来年始めた人は持っていません。<strong>この差は、努力では埋まりません。始めた時期が全てです。</strong></p>
+      <p>「記憶を積み上げてAIを育てている人」は、日本にまだほんの一握りしかいません。今が、先行者利益を取れるタイミングだということです。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 時間の数字（本家と同一） ============ -->
+<section class="sec-paper">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">The Math</span>
+      <h2>あなたの週13時間は、<br>どこに消えているか。</h2>
+      <p class="lead">週に何時間、「調べる」「整理する」「書く」「思い出す」に使っていますか？</p>
+    </div>
+    <div class="time-math rv">
+      <div class="row"><span>調べもの（業界動向・競合・技術情報）</span><span class="v">週5時間</span></div>
+      <div class="row"><span>資料・文章作成（提案書・メール・発信）</span><span class="v">週3時間</span></div>
+      <div class="row"><span>打ち合わせ準備（前回確認・論点整理）</span><span class="v">週2時間</span></div>
+      <div class="row"><span>情報整理・記録（日報・議事録・メモ）</span><span class="v">週3時間</span></div>
+      <div class="row total"><span>合計</span><span class="v">週13時間</span></div>
+    </div>
+    <div class="rv">
+      <p>この見積もりは保守的です。仮に半分になっても、<strong>週6〜7時間、月に25〜28時間</strong>が返ってきます。</p>
+      <p>あなたにとって1時間が3万円の価値を生む仕事なら、<strong class="accent">月75〜84万円分の機会</strong>。1時間5,000円だとしても年間150万円前後。<strong>今まさにこの機会損失が毎月積み上がっていることに、貴方は気づいていません。</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ サービス内容（本家と同一） ============ -->
+<section class="sec-paper alt">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">What I Do</span>
+      <h2>あなたのAIに記憶と<br>アイデンティティを宿らせる設計士</h2>
+      <p class="lead">経営者のAIを、【道具】から【右腕】に変えます。</p>
+    </div>
+    <div class="pillars rv">
+      <div class="pillar">
+        <span class="tag">STEP 1</span>
+        <h3>あなたの文脈を整理し、AIが読める形に構造化する</h3>
+        <p>仕事の内容、クライアント、積み上げてきた判断基準、業界知識。これをAIが読める形に整理します。実は一番価値があるのはここ。「言語化されていなかった判断軸」が初めて形になり、次の判断が速くなり、スタッフへの説明が楽になります。属人化していた知識が、組織の資産になります。</p>
+      </div>
+      <div class="pillar">
+        <span class="tag">STEP 2</span>
+        <h3>Claude CodeとObsidianを繋ぎ、記憶が積み上がる仕組みを作る</h3>
+        <p>技術的な部分は全部やります。あなたは「どういうAIにしたいか、どんな仕事を任せたいか」を話してくれればいい。フォルダ構造、指示書の設計、自動化、通知。全部セットアップして「今日からこのフォルダに書けば動きます」という状態で引き渡します。</p>
+      </div>
+      <div class="pillar">
+        <span class="tag">STEP 3</span>
+        <h3>AIが自律的に動き始めるまで、3ヶ月伴走する</h3>
+        <p>仕組みを作って終わりじゃありません。3ヶ月間、育つのを一緒に見ます。「やってみたけど思ったのと違う」という場面で一緒に調整できるのが、伴走の意味です。</p>
+      </div>
+    </div>
+    <div class="addon rv">
+      <h3 class="addon-title">ご希望に合わせて環境構築します</h3>
+      <div class="chips">
+        <span class="chip">セキュリティ設定</span>
+        <span class="chip">VPS導入（スマホから操作）</span>
+        <span class="chip">WSL環境構築</span>
+        <span class="chip">SSH接続</span>
+        <span class="chip">Discord連携</span>
+        <span class="chip">Slack連携</span>
+        <span class="chip">Linear連携</span>
+        <span class="chip">Gmail管理</span>
+        <span class="chip">Googleカレンダー管理</span>
+        <span class="chip">MCP連携</span>
+        <span class="chip">音声入力</span>
+        <span class="chip">…など</span>
+      </div>
+      <p class="note" style="text-align:center;margin-top:18px">必要なものを話し合って組み込んでいきます。全部入れることも可能です。</p>
+    </div>
+    <div class="rv">
+      <p class="no-subsc">3ヶ月経ったら、あなたのAIは自走し始めます。<br>そうなったら、私は必要なくなります。<span class="accent">それでいいんです。</span></p>
+      <p style="text-align:center;margin-top:16px" class="note">これはサブスクではありません。依存させない設計です。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 顧客の声（本家と同一） ============ -->
+<section class="sec-paper">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">Voices</span>
+      <h2>3ヶ月後、全員がこう言います。<br>「もっと早くやればよかった」</h2>
+    </div>
+    <div class="cases rv">
+      <div class="case">
+        <div class="who">飲食業・経営者</div>
+        <blockquote>「店に入る前から、今日のゲームプランが全部見えている」</blockquote>
+        <p>「前日の売上と今日の仕込み量、シフトのコメントが毎朝届くようにしたい」から始まり、今は食材の発注タイミング、人件費の推移、来月の予測まで朝のブリーフに含まれています。</p>
+      </div>
+      <div class="case">
+        <div class="who">税理士事務所・所長</div>
+        <blockquote>「顧問先から呼ばれる前に、こちらから声をかけられるようになった」</blockquote>
+        <p>顧問先の情報、毎月の数字の動き、過去のやりとりが積み上がり、「この顧問先、来月資金繰りが厳しくなるかもしれない」という予兆をAIが先に拾えるようになりました。</p>
+      </div>
+      <div class="case">
+        <div class="who">経営コンサルタント</div>
+        <blockquote>「打ち合わせに入る前に、仮説が3本立っている」</blockquote>
+        <p>クライアントごとの議事録、過去の類似案件での判断、業界の数字をAIが横断して、事前に論点と仮説を組み立ててくる。頭の使いどころが「思い出す」から「決める」に変わり、提案の質そのものが上がりました。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 料金（本家と同一） ============ -->
+<section class="sec-dark" style="background:var(--md-deep)">
+  <div class="wrap">
+    <div class="rv" style="text-align:center">
+      <span class="eyebrow" style="color:var(--md-glow)">Investment</span>
+      <h2 style="color:#fff">このレベルの右腕を、<br>人間で雇うとしたら。</h2>
+    </div>
+    <div class="price-frame rv">
+      <p class="price-usual">経営の文脈を全部知っていて、24時間動いて、朝までに資料を仕上げてくる右腕。<br>人間で雇えば<b class="price-strike">月々数十万円</b>はするでしょう。<br>大手ファームの経営コンサル顧問契約なら、月数百万は下りません。</p>
+      <p class="price-md">それが MEMORY DESIGN なら——<br><span class="accent">買い切りの設計費と、3ヶ月の伴走だけ。</span></p>
+      <p class="note" style="margin-top:26px;color:#B8CDC2">詳しい料金は、初回面談であなたに必要な設計範囲を伺ったうえでご案内します。<br>月々の固定費が続くサブスク型ではありません。</p>
+      <p class="note" style="margin-top:22px;color:#B8CDC2">申し込み後の流れ：① フォーム送信 → ② 1時間の無料オンライン面談 → ③ 必要な設計範囲とお見積りのご提案。<br>提案を聞いて「合わない」と思ったら、そこで終わって構いません。</p>
+      <div style="text-align:center;margin-top:36px">
+        <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ プロフィール（本家と同一・顔写真入り） ============ -->
+<section class="sec-paper">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">Profile</span>
+      <h2>「もし10年前にこれがあったら」<br>と、今でも思う。</h2>
+    </div>
+    <div class="profile rv">
+      <div class="profile-side">
+        <div class="profile-photo"><img src="assets/mitsui.jpg" alt="三井隆義" loading="lazy"></div>
+        <div class="name-block">
+          <div class="name">三井 隆義<small>TAKAYOSHI MITSUI</small></div>
         </div>
       </div>
-      <div class="step reveal">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <h3>記憶が積み上がる仕組みを作る</h3>
-          <p>技術的な部分は全部やります。あなたは「どういうAIにしたいか」を話してくれればいい。今日から動く状態で引き渡します。</p>
+      <div class="bio">
+        <div class="career">
+          <span class="c">飲食業界28年<small>（経営者14年）</small></span>
+          <span class="a">→</span>
+          <span class="c">会計事務所 3年</span>
+          <span class="a">→</span>
+          <span class="c" style="border-color:var(--md-green);color:var(--md-green)">AI経営コンサルタント</span>
         </div>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <h3>自律的に動き始めるまで、3ヶ月伴走する</h3>
-          <p>仕組みを作って終わりじゃない。3ヶ月間、育つのを一緒に見ます。3ヶ月経ったら、私は必要なくなる。それでいいんです。</p>
-        </div>
+        <p>飲食の現場で14年、経営者として立ち続けました。時間がなかった。情報がバラバラだった。決断する材料を集めるだけで、1日が終わることがありました。</p>
+        <p>その後、会計事務所で3年、経営者の「数字の裏側」を見続けました。数字が悪いのは、判断が遅かったからじゃない。<strong>「決断する材料が揃っていなかった」から、判断が遅れていた。</strong>情報が揃っていれば、もっと早く打てた手がある——その経験が、今の仕事の根っこにあります。</p>
+        <p>飲食経営者としての現場感と、会計事務所で培った数字の読み方。この両方を持っているAIコンサルタントは、日本にそう多くないと思っています。</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Voices -->
-<section class="paper-section">
-  <div class="wrap">
-    <div class="section-eyebrow reveal">VOICES</div>
-    <h2 class="section-title reveal">3ヶ月後、全員がこう言います。<br>「もっと早くやればよかった」</h2>
-    <div class="voice-grid">
-      <div class="voice-card reveal">
-        <div class="tag">飲食業・経営者</div>
-        <p class="quote">「店に入る前から、今日のゲームプランが全部見えている」</p>
-        <p class="detail">前日の売上と仕込み量、シフトのコメントから始まり、今は発注タイミング・人件費・来月の予測まで朝のブリーフに含まれる。</p>
-      </div>
-      <div class="voice-card reveal">
-        <div class="tag">税理士事務所・所長</div>
-        <p class="quote">「顧問先から呼ばれる前に、こちらから声をかけられるようになった」</p>
-        <p class="detail">顧問先情報の積み上げで、「来月資金繰りが厳しくなるかも」という予兆をAIが先に拾えるように。</p>
-      </div>
-      <div class="voice-card reveal">
-        <div class="tag">経営コンサルタント</div>
-        <p class="quote">「打ち合わせに入る前に、仮説が3本立っている」</p>
-        <p class="detail">頭の使いどころが「思い出す」から「決める」に変わり、提案の質そのものが上がった。</p>
-      </div>
+<!-- ============ 最終CTA（本家と同一・記憶のグラフ） ============ -->
+<section class="final sec-dark" id="contact">
+  <canvas id="graph2" aria-hidden="true"></canvas>
+  <div class="inner wrap">
+    <span class="eyebrow rv">First Step</span>
+    <h2 class="rv">気づいたその日が、<br>最短・最速です。</h2>
+    <p class="lead rv">初回は、話を聞くところから始めます。あなたの仕事の内容、今のAIの使い方、何に時間がかかっているか。それを聞いてから、何が必要かを一緒に考えます。</p>
+    <div class="rv">
+      <a class="btn btn-primary" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
+      <p class="note" style="margin-top:18px;color:var(--md-mist)">初回1時間・無料・オンライン。売り込みはしません。<br>伴走型サービスのため、同時にお受けできるのは<strong style="color:var(--md-glow)">5社まで</strong>です。空き状況は面談時にお伝えします。</p>
     </div>
   </div>
-</section>
-
-<!-- Profile -->
-<section class="paper-section dim">
-  <div class="wrap">
-    <div class="section-eyebrow reveal">PROFILE</div>
-    <h2 class="section-title reveal">「もし10年前にこれがあったら」と、<br>今でも思う。</h2>
-    <div class="profile reveal">
-      <div class="profile-name">
-        <div class="jp">三井 隆義</div>
-        <div class="en">TAKAYOSHI MITSUI</div>
-      </div>
-      <div class="profile-text">
-        飲食業界28年（経営者14年）→ 会計事務所3年 → AI経営コンサルタント。<br><br>
-        飲食の現場で14年、経営者として立ち続けた。時間がなかった。情報がバラバラだった。決断する材料を集めるだけで、1日が終わることがあった。その後、会計事務所で3年、経営者の「数字の裏側」を見続けた。数字が悪いのは判断が遅かったからじゃない。<strong>「決断する材料が揃っていなかった」から</strong>、判断が遅れていた。
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= FINAL CTA ================= -->
-<section class="cta-section">
-  <div class="title reveal">貴方のAIを、<br>世界一の右腕にする。</div>
-  <p class="sub reveal">気づいたその日が、最短・最速です。<br>初回は、話を聞くところから始めます。<br>『 MEMORY DESIGN 』</p>
-  <div class="reveal">
-    <a class="btn-cta" href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
-  </div>
-  <p class="flow reveal">申し込み後の流れ：① フォーム送信 → ② 1時間の無料オンライン面談 → ③ 必要な設計範囲とお見積りのご提案。<br>提案を聞いて「合わない」と思ったら、そこで終わって構いません。<br>伴走型サービスのため、同時にお受けできるのは<strong>5社まで</strong>です。</p>
-  <div class="brand-tag">MEMORY DESIGN</div>
 </section>
 
 <div class="sticky-cta" id="stickyCta">
   <a href="https://form.run/@taka3210" target="_blank" rel="noopener">初回面談を申し込む（無料）</a>
 </div>
+
+<footer>
+  MEMORY DESIGN — あなたのAIに、記憶とアイデンティティを。<br>
+  &copy; 2026 Takayoshi Mitsui
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
 <script>
@@ -956,8 +1235,8 @@
     nums.forEach(function(el){ numIo.observe(el); });
   }
 
-  /* ============ スクロールリビール ============ */
-  var targets = document.querySelectorAll('.reveal');
+  /* ============ スクロールリビール（.rv=本家セクション用） ============ */
+  var targets = document.querySelectorAll('.reveal, .rv');
   if('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
@@ -1177,9 +1456,200 @@
     window.scrollTo({top:cinema.offsetTop + 2, behavior:reduced ? 'auto' : 'smooth'});
   });
 
+  /* ============ 本家セクション用：スクロール進捗（記憶グラフの成長係数） ============ */
+  var progRaw = 0, prog = 0;
+  function calcProg(){
+    var m = document.documentElement.scrollHeight - window.innerHeight;
+    progRaw = m > 0 ? Math.min(1, window.scrollY / m) : 0;
+  }
+  calcProg();
+  window.addEventListener('scroll', calcProg, {passive:true});
+  (function progLoop(){
+    prog += (progRaw - prog) * (reduced ? 1 : 0.08);
+    requestAnimationFrame(progLoop);
+  })();
+
+  /* ============ 記憶のグラフ（本家と同一の2Dネットワーク・最終CTA背景） ============ */
+  function initGraph(canvas, opts){
+    const ctx = canvas.getContext('2d');
+    if(!ctx) return;
+    let W, H, dpr;
+    const isMobile = matchMedia('(max-width:760px)').matches;
+    const MAX = isMobile ? Math.floor(opts.max*0.55) : opts.max;
+    const nodes = [], links = [];
+
+    function resize(){
+      dpr = Math.min(devicePixelRatio||1, 2);
+      W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = W*dpr; canvas.height = H*dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    resize();
+    addEventListener('resize', resize);
+
+    function addNode(){
+      let x, y;
+      if(nodes.length && Math.random() > .18){
+        const p = nodes[Math.floor(Math.random()*nodes.length)];
+        const a = Math.random()*Math.PI*2, d = 40+Math.random()*110;
+        x = p.x + Math.cos(a)*d; y = p.y + Math.sin(a)*d;
+      }else{
+        x = W*(.08+Math.random()*.84); y = H*(.08+Math.random()*.84);
+      }
+      x = Math.max(10, Math.min(W-10, x));
+      y = Math.max(10, Math.min(H-10, y));
+      const n = {
+        x, y,
+        vx:(Math.random()-.5)*.08, vy:(Math.random()-.5)*.08,
+        r: Math.random()<.08 ? 2.6+Math.random()*1.6 : 1+Math.random()*1.4,
+        born: performance.now(),
+        pulse: 0
+      };
+      const cands = nodes.map((m,i)=>({i, d:(m.x-x)**2+(m.y-y)**2}))
+        .sort((a,b)=>a.d-b.d).slice(0, 1+Math.floor(Math.random()*3));
+      cands.forEach(c=>{ if(c.d < 200*200) links.push([nodes.length, c.i]); });
+      nodes.push(n);
+    }
+
+    const initial = reduced ? MAX : Math.floor(MAX*0.15);
+    for(let i=0;i<initial;i++) addNode();
+
+    function frame(t){
+      if(!reduced){
+        const target = Math.min(MAX, Math.max(initial, Math.floor(initial + (MAX - initial) * prog)));
+        let guard = 0;
+        while(nodes.length < target && guard++ < 6){ addNode(); }
+        if(Math.random()<.012 && nodes.length){
+          nodes[Math.floor(Math.random()*nodes.length)].pulse = 1;
+        }
+      }
+      ctx.clearRect(0,0,W,H);
+
+      ctx.lineWidth = .6;
+      for(const [a,b] of links){
+        const na=nodes[a], nb=nodes[b];
+        if(!na||!nb) continue;
+        ctx.strokeStyle = 'rgba(190,210,198,.10)';
+        ctx.beginPath(); ctx.moveTo(na.x,na.y); ctx.lineTo(nb.x,nb.y); ctx.stroke();
+      }
+
+      for(const n of nodes){
+        if(!reduced){
+          n.x += n.vx; n.y += n.vy;
+          if(n.x<8||n.x>W-8) n.vx*=-1;
+          if(n.y<8||n.y>H-8) n.vy*=-1;
+        }
+        const age = (t - n.born)/1200;
+        const birth = Math.min(1, age);
+        if(n.pulse>0) n.pulse = Math.max(0, n.pulse-.008);
+        const g = Math.max(n.pulse, Math.max(0, 1-age));
+        const r = n.r * (1 + g*.9);
+        if(g>0.02){
+          const grad = ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,r*5);
+          grad.addColorStop(0,'rgba(93,199,154,'+(0.5*g*birth)+')');
+          grad.addColorStop(1,'rgba(93,199,154,0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath(); ctx.arc(n.x,n.y,r*5,0,7); ctx.fill();
+        }
+        ctx.fillStyle = 'rgba('+(g>.05?93:200)+','+(g>.05?199:212)+','+(g>.05?154:202)+','+(0.85*birth)+')';
+        ctx.beginPath(); ctx.arc(n.x,n.y,r,0,7); ctx.fill();
+      }
+      if(!reduced) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  var g2 = document.getElementById('graph2');
+  if(g2){
+    try{ initGraph(g2, {max:90, interval:900}); }catch(e){}
+  }
+
+  /* ============ 複利ミニグラフ（本家と同一・シード付き） ============ */
+  function seeded(s){ return function(){ s=(s*9301+49297)%233280; return s/233280; }; }
+  document.querySelectorAll('.gc').forEach(function(cv, idx){
+    const n = +cv.dataset.n;
+    const dense = !!cv.dataset.dense;
+    const dpr = Math.min(devicePixelRatio||1,2);
+    const draw = (k=1)=>{
+      const s = cv.clientWidth;
+      cv.width = s*dpr; cv.height = s*dpr;
+      const c = cv.getContext('2d');
+      c.setTransform(dpr,0,0,dpr,0,0);
+      const pts=[];
+      const r2 = seeded(42+idx*7);
+      const hubs=[];
+      if(dense){
+        for(let h=0;h<7;h++){
+          const a=r2()*Math.PI*2, d=Math.pow(r2(),.7)*s*.36;
+          hubs.push({x:s/2+Math.cos(a)*d, y:s/2+Math.sin(a)*d});
+        }
+      }
+      for(let i=0;i<n;i++){
+        let x,y;
+        if(dense && r2()<.45){
+          const hb=hubs[Math.floor(r2()*hubs.length)];
+          const a=r2()*Math.PI*2, d=Math.pow(r2(),.8)*s*.11;
+          x=hb.x+Math.cos(a)*d; y=hb.y+Math.sin(a)*d;
+        }else{
+          const a=r2()*Math.PI*2, d=Math.pow(r2(), dense?.78:.6)*s*(dense?.46:.42);
+          x=s/2+Math.cos(a)*d; y=s/2+Math.sin(a)*d;
+        }
+        pts.push({x, y, r:r2()<.1?2.2:0.8+r2()*1.1});
+      }
+      const m = Math.max(2, Math.floor(n*k));
+      const vis = pts.slice(0, m);
+      c.lineWidth=.5;
+      const linkR = s*(dense?.12:.16);
+      for(let i=0;i<vis.length;i++){
+        let best=[], p=vis[i];
+        for(let j=0;j<vis.length;j++){
+          if(i===j) continue;
+          const q=vis[j], dd=(p.x-q.x)**2+(p.y-q.y)**2;
+          if(dd < linkR*linkR) best.push(q);
+        }
+        best.slice(0,3).forEach(q=>{
+          c.strokeStyle='rgba(190,210,198,'+(dense?.09:.12)+')';
+          c.beginPath(); c.moveTo(p.x,p.y); c.lineTo(q.x,q.y); c.stroke();
+        });
+      }
+      vis.forEach((p,i)=>{
+        const green = i > m*0.82;
+        c.fillStyle = green ? 'rgba(93,199,154,.95)' : 'rgba(200,212,202,.8)';
+        c.beginPath(); c.arc(p.x,p.y,p.r,0,7); c.fill();
+      });
+    };
+    if(reduced){
+      draw();
+    }else{
+      draw(0.02);
+      const ioG = new IntersectionObserver(es=>{
+        es.forEach(e=>{
+          if(!e.isIntersecting) return;
+          ioG.unobserve(cv);
+          const t0 = performance.now(), dur = 1500;
+          (function tk(t){
+            const k = Math.min(1,(t-t0)/dur);
+            draw(1-Math.pow(1-k,2));
+            if(k<1) requestAnimationFrame(tk);
+          })(t0);
+        });
+      },{threshold:.5});
+      ioG.observe(cv);
+    }
+    addEventListener('resize', ()=>draw());
+  });
+
+  /* ============ 忘却チャットの再生（本家と同一） ============ */
+  var chatD = document.getElementById('chatDemo');
+  if(chatD && 'IntersectionObserver' in window){
+    var ioC = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ chatD.classList.add('play'); ioC.unobserve(chatD); } });
+    }, {threshold:.4});
+    ioC.observe(chatD);
+  }
+
   /* ============ sticky CTA ============ */
   var sticky = document.getElementById('stickyCta');
-  var finalCta = document.querySelector('.cta-section');
+  var finalCta = document.querySelector('.final');
   var pastManga = false, ctaVisible = false;
   function syncSticky(){
     sticky.classList.toggle('show', pastManga && !ctaVisible);
